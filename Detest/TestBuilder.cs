@@ -1,6 +1,6 @@
 ﻿namespace Detest;
 
-internal static class TestBuilder
+public static class TestBuilder
 {
     [ThreadStatic]
     private static TestScope? CurrentScope;
@@ -8,7 +8,7 @@ internal static class TestBuilder
     [ThreadStatic]
     private static TestScope? RootScope;
 
-    public static TestScope ConsumeRootScope()
+    internal static TestScope ConsumeRootScope()
     {
         if (RootScope == null)
         {
