@@ -50,13 +50,13 @@ internal partial class DetestXunitTestCase(TestScope testScope, ITestMethod call
         CancellationTokenSource cancellationTokenSource
     )
     {
-        return new DetestXunitTestCaseRunner(testScope, this).RunAsync(
-            diagnosticMessageSink,
+        return new DetestXunitTestCaseRunner(
+            testScope,
+            this,
             messageBus,
-            constructorArguments,
             aggregator,
             cancellationTokenSource
-        );
+        ).RunAsync();
     }
 
     public void Serialize(IXunitSerializationInfo info)

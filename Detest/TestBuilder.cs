@@ -23,6 +23,16 @@ public static class TestBuilder
         CurrentScope
         ?? throw new InvalidOperationException("No current scope. Has Describe been called?");
 
+    [Obsolete(
+        "Do not call Describe with an async body. Use BeforeAll, BeforeEach to perform asynchronous test setup. Remove async from the method signature to fix this error."
+    )]
+    public static void Describe(string description, Func<Task> body) =>
+        throw new InvalidOperationException(
+            @"Must call Describe methods with a synchronous body.
+             Use BeforeAll, BeforeEach to perform asynchronous test setup.
+             Remove async from the method signature to fix this error."
+        );
+
     public static void Describe(string description, Action body)
     {
         if (RootScope == null)

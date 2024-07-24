@@ -24,6 +24,23 @@ public class UnitTest1
                     }
                 );
 
+                Describe(
+                    "Nested",
+                    () =>
+                    {
+                        It(
+                            "Should pass",
+                            async () =>
+                            {
+                                await Task.Delay(5000);
+                                Assert.True(true);
+                            }
+                        );
+
+                        It("Should fail", () => Assert.True(false));
+                    }
+                );
+
                 It("Should fail", () => Assert.True(false));
             }
         );

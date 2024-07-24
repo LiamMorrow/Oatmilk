@@ -10,25 +10,65 @@ namespace Detest;
 
 internal class DetestXunitTestCaseRunner(
     TestScope testScope,
-    DetestXunitTestCase detestXunitTestCase
+    DetestXunitTestCase detestXunitTestCase,
+    IMessageBus messageBus,
+    ExceptionAggregator aggregator,
+    CancellationTokenSource cancellationTokenSource
 )
 {
     private readonly TestScope testScope = testScope;
     private readonly DetestXunitTestCase detestXunitTestCase = detestXunitTestCase;
 
-    public async Task<RunSummary> RunAsync(
-        IMessageSink diagnosticMessageSink,
-        IMessageBus messageBus,
-        object[] constructorArguments,
-        ExceptionAggregator aggregator,
-        CancellationTokenSource cancellationTokenSource
-    )
+    public async Task<RunSummary> RunAsync()
+    {
+        var result = new RunSummary();
+
+        await RunBeforeAllsIncludingParentsAsync(testScope);
+
+        result.Aggregate(await RunTestsInScopeAsync(testScope));
+
+        foreach (var child in testScope.Children)
+        {
+            result.Aggregate(await RunTestsInScopeAsync(child));
+        }
+
+        await RunAfterAllsIncludingParentsAsync(testScope);
+
+        return result;
+    }
+
+    private async Task RunBeforeAllsIncludingParentsAsync(TestScope testScope)
+    {
+        if (testScope.Parent != null)
+        {
+            await RunBeforeAllsIncludingParentsAsync(testScope.Parent);
+        }
+        foreach (var beforeAll in testScope.TestBeforeAlls)
+        {
+            await beforeAll.Body.Invoke();
+        }
+    }
+
+    private async Task RunAfterAllsIncludingParentsAsync(TestScope testScope)
+    {
+        foreach (var afterAll in testScope.TestAfterAlls)
+        {
+            await afterAll.Body.Invoke();
+        }
+        if (testScope.Parent != null)
+        {
+            await RunAfterAllsIncludingParentsAsync(testScope.Parent);
+        }
+    }
+
+    private async Task<RunSummary> RunTestsInScopeAsync(TestScope testScope)
     {
         var result = new RunSummary();
         foreach (var t in testScope.TestMethods)
         {
             result.Total++;
-            ITest test = new XunitTest(detestXunitTestCase, GetDescription(t));
+            await RunBeforeEachesIncludingParentsAsync(testScope);
+            ITest test = new XunitTest(detestXunitTestCase, GetDescription(t, testScope));
             messageBus.QueueMessage(new TestStarting(test));
             var sw = Stopwatch.StartNew();
             try
@@ -46,21 +86,45 @@ internal class DetestXunitTestCaseRunner(
                 aggregator.Add(ex);
                 result.Failed++;
             }
+            await RunAfterEachesIncludingParentsAsync(testScope);
         }
-
         return result;
     }
 
-    private string GetDescription(TestExecutionMethod t)
+    private async Task RunAfterEachesIncludingParentsAsync(TestScope testScope)
+    {
+        foreach (var afterAll in testScope.TestAfterEachs)
+        {
+            await afterAll.Body.Invoke();
+        }
+        if (testScope.Parent != null)
+        {
+            await RunAfterEachesIncludingParentsAsync(testScope.Parent);
+        }
+    }
+
+    private async Task RunBeforeEachesIncludingParentsAsync(TestScope testScope)
+    {
+        if (testScope.Parent != null)
+        {
+            await RunBeforeEachesIncludingParentsAsync(testScope.Parent);
+        }
+        foreach (var beforeAll in testScope.TestBeforeEachs)
+        {
+            await beforeAll.Body.Invoke();
+        }
+    }
+
+    private string GetDescription(TestExecutionMethod t, TestScope scope)
     {
         var sb = new StringBuilder();
-        var parent = testScope.Parent;
+        var parent = scope.Parent;
         while (parent != null)
         {
             sb.Insert(0, parent.Description + " ");
             parent = parent.Parent;
         }
-        sb.Append(testScope.Description).Append(' ').Append(t.Description);
+        sb.Append(scope.Description).Append(' ').Append(t.Description);
         return sb.ToString();
     }
 }
