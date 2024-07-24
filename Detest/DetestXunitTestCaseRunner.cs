@@ -12,8 +12,7 @@ internal class DetestXunitTestCaseRunner(
     TestScope testScope,
     DetestXunitTestCase detestXunitTestCase,
     IMessageBus messageBus,
-    ExceptionAggregator aggregator,
-    CancellationTokenSource cancellationTokenSource
+    ExceptionAggregator aggregator
 )
 {
     private readonly TestScope testScope = testScope;

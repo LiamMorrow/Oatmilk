@@ -1,9 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <Version>0.0.1-prerelease</Version>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackageId>Detest</PackageId>
+    <Authors>Liam Morrow</Authors>
+    <Title>
+      Detest
+    </Title>
+    <Description>
+      An Xunit extension for c# that allows for more readable tests, heavily inspired by Jest
+    </Description>
+    <OutputType>Library</OutputType>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <IncludeSource>true</IncludeSource>
+    <RepositoryUrl>https://github.com/LiamMorrow/Detest</RepositoryUrl>
+    <PackageReleaseNotes>
+      Initial release
+    </PackageReleaseNotes>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
