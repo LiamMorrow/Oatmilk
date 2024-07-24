@@ -8,7 +8,33 @@ namespace Detest;
 [XunitTestCaseDiscoverer("Detest.DetestDiscoverer", "Detest")]
 public sealed class DetestAttribute : FactAttribute { }
 
-public class DetestDiscoverer() : IXunitTestCaseDiscoverer
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+[XunitTestCaseDiscoverer("Detest.DescribeDiscoverer", "Detest")]
+public sealed class DescribeAttribute(string Description) : FactAttribute
+{
+    public string Description { get; } = Description;
+}
+
+internal class DescribeDiscoverer : IXunitTestCaseDiscoverer
+{
+    public IEnumerable<IXunitTestCase> Discover(
+        ITestFrameworkDiscoveryOptions discoveryOptions,
+        ITestMethod tm,
+        IAttributeInfo factAttribute
+    )
+    {
+        var instance = Activator.CreateInstance(tm.TestClass.Class.ToRuntimeType());
+        TestBuilder.Describe(
+            factAttribute.GetNamedArgument<string>("Description"),
+            () => tm.Method.ToRuntimeMethod().Invoke(instance, null)
+        );
+        var testScope = TestBuilder.ConsumeRootScope();
+
+        yield return new DetestXunitTestCase(testScope, tm);
+    }
+}
+
+internal class DetestDiscoverer : IXunitTestCaseDiscoverer
 {
     public IEnumerable<IXunitTestCase> Discover(
         ITestFrameworkDiscoveryOptions discoveryOptions,

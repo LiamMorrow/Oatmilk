@@ -3,11 +3,10 @@ namespace Detest.Tests;
 using Xunit.Sdk;
 using static Detest.TestBuilder;
 
-public class UnitTest3 : DetestTestBase
+public class UnitTest4
 {
-    protected override string Description => "My tests with the DetestTestBase";
-
-    protected override void Described()
+    [Describe("My tests with the DescribeAttribute")]
+    public void Spec()
     {
         BeforeAll(() =>
         {

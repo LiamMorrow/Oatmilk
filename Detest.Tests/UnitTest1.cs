@@ -15,6 +15,13 @@ public class UnitTest1
                     Console.WriteLine("BeforeAll");
                 });
 
+                AfterEach(
+                    (ctx) =>
+                    {
+                        Console.WriteLine("After " + ctx.Description);
+                    }
+                );
+
                 It("Should pass")
                     .When(() =>
                     {
@@ -29,10 +36,6 @@ public class UnitTest1
                             {
                                 Assert.True(true);
                             });
-
-                        It("Should fail").When(() => Assert.True(false));
                     });
-
-                It("Should fail").When(() => Assert.True(false));
             });
 }

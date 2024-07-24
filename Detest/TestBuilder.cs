@@ -89,15 +89,19 @@ public static class TestBuilder
             return Task.CompletedTask;
         });
 
-    public static void AfterEach(Func<Task> body) =>
-        CurrentScopeNotNull.TestAfterEachs.Add(new TestSetupMethod(body));
+    public static void AfterEach(Func<Task> body) => AfterEach(ctx => body());
 
-    public static void AfterEach(Action body) =>
-        AfterEach(() =>
+    public static void AfterEach(Action<FinishedTestContext> body) =>
+        AfterEach(ctx =>
         {
-            body();
+            body(ctx);
             return Task.CompletedTask;
         });
+
+    public static void AfterEach(Func<FinishedTestContext, Task> body) =>
+        CurrentScopeNotNull.TestAfterEachs.Add(new TestAfterEachMethod(body));
+
+    public static void AfterEach(Action body) => AfterEach(ctx => body());
 
     public static void AfterAll(Func<Task> body) =>
         CurrentScopeNotNull.TestAfterAlls.Add(new TestSetupMethod(body));

@@ -65,6 +65,7 @@ internal class DetestXunitTestCaseRunner(
             ITest test = new XunitTest(detestXunitTestCase, GetDescription(t, testScope));
             messageBus.QueueMessage(new TestStarting(test));
             var sw = Stopwatch.StartNew();
+            var finishedTestContext = new FinishedTestContext(true, GetDescription(t, testScope));
             try
             {
                 await t.Body.Invoke();
@@ -79,8 +80,9 @@ internal class DetestXunitTestCaseRunner(
                 );
                 aggregator.Add(ex);
                 result.Failed++;
+                finishedTestContext = finishedTestContext with { Passed = false };
             }
-            await RunAfterEachesIncludingParentsAsync(testScope);
+            await RunAfterEachesIncludingParentsAsync(finishedTestContext, testScope);
         }
 
         foreach (var child in testScope.Children)
@@ -90,15 +92,18 @@ internal class DetestXunitTestCaseRunner(
         return result;
     }
 
-    private async Task RunAfterEachesIncludingParentsAsync(TestScope testScope)
+    private async Task RunAfterEachesIncludingParentsAsync(
+        FinishedTestContext finishedTestContext,
+        TestScope testScope
+    )
     {
-        foreach (var afterAll in testScope.TestAfterEachs)
+        foreach (var afterEach in testScope.TestAfterEachs)
         {
-            await afterAll.Body.Invoke();
+            await afterEach.Body.Invoke(finishedTestContext);
         }
         if (testScope.Parent != null)
         {
-            await RunAfterEachesIncludingParentsAsync(testScope.Parent);
+            await RunAfterEachesIncludingParentsAsync(finishedTestContext, testScope.Parent);
         }
     }
 

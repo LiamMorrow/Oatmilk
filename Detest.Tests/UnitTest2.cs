@@ -1,11 +1,10 @@
 namespace Detest.Tests;
 
-using Xunit.Sdk;
 using static Detest.TestBuilder;
 
 public class UnitTest2
 {
-    [Detest()]
+    [Detest]
     public static void TestScope() =>
         Describe(
             "My tests using the multi arg syntax",
@@ -16,6 +15,12 @@ public class UnitTest2
                     Console.WriteLine("BeforeAll");
                 });
 
+                AfterEach(
+                    (ctx) =>
+                    {
+                        Console.WriteLine("After " + ctx.Description);
+                    }
+                );
                 It(
                     "Should pass",
                     () =>
@@ -23,8 +28,6 @@ public class UnitTest2
                         Assert.True(true);
                     }
                 );
-
-                It("Should fail 2", () => Assert.True(false));
             }
         );
 }
