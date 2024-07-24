@@ -87,6 +87,11 @@ internal class DetestXunitTestCaseRunner(
             }
             await RunAfterEachesIncludingParentsAsync(testScope);
         }
+
+        foreach (var child in testScope.Children)
+        {
+            result.Aggregate(await RunTestsInScopeAsync(child));
+        }
         return result;
     }
 
