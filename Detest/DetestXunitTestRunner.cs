@@ -17,7 +17,7 @@ public class DetestDiscoverer() : IXunitTestCaseDiscoverer
     )
     {
         tm.Method.ToRuntimeMethod().Invoke(null, null);
-        var testScope = TestBuilder.GetRootScope();
+        var testScope = TestBuilder.ConsumeRootScope();
 
         yield return new DetestXunitTestCase(testScope, tm);
     }

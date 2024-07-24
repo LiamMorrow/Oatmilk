@@ -8,7 +8,7 @@ internal static class TestBuilder
     [ThreadStatic]
     private static TestScope? RootScope;
 
-    public static TestScope GetRootScope()
+    public static TestScope ConsumeRootScope()
     {
         if (RootScope == null)
         {
@@ -19,7 +19,9 @@ internal static class TestBuilder
         return rs;
     }
 
-    public static void ClearScope() => CurrentScope = null;
+    private static TestScope CurrentScopeNotNull =>
+        CurrentScope
+        ?? throw new InvalidOperationException("No current scope. Has Describe been called?");
 
     public static void Describe(string description, Action body)
     {
@@ -41,7 +43,7 @@ internal static class TestBuilder
     }
 
     public static void BeforeAll(Func<Task> body) =>
-        CurrentScope.TestBeforeAlls.Add(new TestSetupMethod(body));
+        CurrentScopeNotNull.TestBeforeAlls.Add(new TestSetupMethod(body));
 
     public static void BeforeAll(Action body) =>
         BeforeAll(() =>
@@ -51,7 +53,7 @@ internal static class TestBuilder
         });
 
     public static void BeforeEach(Func<Task> body) =>
-        CurrentScope.TestBeforeEachs.Add(new TestSetupMethod(body));
+        CurrentScopeNotNull.TestBeforeEachs.Add(new TestSetupMethod(body));
 
     public static void BeforeEach(Action body) =>
         BeforeEach(() =>
@@ -61,7 +63,7 @@ internal static class TestBuilder
         });
 
     public static void AfterEach(Func<Task> body) =>
-        CurrentScope.TestAfterEachs.Add(new TestSetupMethod(body));
+        CurrentScopeNotNull.TestAfterEachs.Add(new TestSetupMethod(body));
 
     public static void AfterEach(Action body) =>
         AfterEach(() =>
@@ -71,7 +73,7 @@ internal static class TestBuilder
         });
 
     public static void AfterAll(Func<Task> body) =>
-        CurrentScope.TestAfterAlls.Add(new TestSetupMethod(body));
+        CurrentScopeNotNull.TestAfterAlls.Add(new TestSetupMethod(body));
 
     public static void AfterAll(Action body) =>
         AfterAll(() =>
@@ -81,7 +83,7 @@ internal static class TestBuilder
         });
 
     public static void It(string description, Func<Task> body) =>
-        CurrentScope.TestMethods.Add(new TestExecutionMethod(description, body));
+        CurrentScopeNotNull.TestMethods.Add(new TestExecutionMethod(description, body));
 
     public static void It(string description, Action body) =>
         It(
