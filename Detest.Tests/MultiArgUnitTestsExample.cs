@@ -1,14 +1,14 @@
 namespace Detest.Tests;
 
-using Xunit.Sdk;
 using static Detest.TestBuilder;
 
-public class UnitTest1
+public class MultiArgUnitTestsExample
 {
   [Detest]
   public static void TestScope() =>
-    Describe("My tests using the fluent syntax")
-      .As(() =>
+    Describe(
+      "My tests using the multi arg syntax",
+      () =>
       {
         BeforeAll(() =>
         {
@@ -22,20 +22,13 @@ public class UnitTest1
           }
         );
 
-        It("Should pass")
-          .When(() =>
+        It(
+          "Should pass",
+          () =>
           {
             Assert.True(true);
-          });
-
-        Describe("Nested")
-          .As(() =>
-          {
-            It("Should pass")
-              .When(() =>
-              {
-                Assert.True(true);
-              });
-          });
-      });
+          }
+        );
+      }
+    );
 }
