@@ -5,7 +5,7 @@ using static Detest.TestBuilder;
 
 public class UnitTest3 : DetestTestBase
 {
-    public override void DescribeTests() =>
+    public override void TestScope() =>
         Describe("My Sick test")
             .As(() =>
             {
