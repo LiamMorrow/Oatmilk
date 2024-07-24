@@ -16,7 +16,8 @@ public class DetestDiscoverer() : IXunitTestCaseDiscoverer
         IAttributeInfo factAttribute
     )
     {
-        tm.Method.ToRuntimeMethod().Invoke(null, null);
+        var instance = Activator.CreateInstance(tm.TestClass.Class.ToRuntimeType());
+        tm.Method.ToRuntimeMethod().Invoke(instance, null);
         var testScope = TestBuilder.ConsumeRootScope();
 
         yield return new DetestXunitTestCase(testScope, tm);

@@ -7,7 +7,7 @@ public class UnitTest1
 {
     [Detest]
     public static void TestScope() =>
-        Describe("My Sick test")
+        Describe("My tests using the fluent syntax")
             .As(() =>
             {
                 BeforeAll(() =>

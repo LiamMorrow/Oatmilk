@@ -8,7 +8,7 @@ public class UnitTest2
     [Detest()]
     public static void TestScope() =>
         Describe(
-            "My Sick test 2",
+            "My tests using the multi arg syntax",
             () =>
             {
                 BeforeAll(() =>
