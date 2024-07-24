@@ -12,76 +12,76 @@ public sealed class DetestAttribute : FactAttribute { }
 [XunitTestCaseDiscoverer("Detest.DescribeDiscoverer", "Detest")]
 public sealed class DescribeAttribute(string Description) : FactAttribute
 {
-    public string Description { get; } = Description;
+  public string Description { get; } = Description;
 }
 
 internal class DescribeDiscoverer : IXunitTestCaseDiscoverer
 {
-    public IEnumerable<IXunitTestCase> Discover(
-        ITestFrameworkDiscoveryOptions discoveryOptions,
-        ITestMethod tm,
-        IAttributeInfo factAttribute
-    )
-    {
-        var instance = Activator.CreateInstance(tm.TestClass.Class.ToRuntimeType());
-        TestBuilder.Describe(
-            factAttribute.GetNamedArgument<string>("Description"),
-            () => tm.Method.ToRuntimeMethod().Invoke(instance, null)
-        );
-        var testScope = TestBuilder.ConsumeRootScope();
+  public IEnumerable<IXunitTestCase> Discover(
+    ITestFrameworkDiscoveryOptions discoveryOptions,
+    ITestMethod tm,
+    IAttributeInfo factAttribute
+  )
+  {
+    var instance = Activator.CreateInstance(tm.TestClass.Class.ToRuntimeType());
+    TestBuilder.Describe(
+      factAttribute.GetNamedArgument<string>("Description"),
+      () => tm.Method.ToRuntimeMethod().Invoke(instance, null)
+    );
+    var testScope = TestBuilder.ConsumeRootScope();
 
-        yield return new DetestXunitTestCase(testScope, tm);
-    }
+    yield return new DetestXunitTestCase(testScope, tm);
+  }
 }
 
 internal class DetestDiscoverer : IXunitTestCaseDiscoverer
 {
-    public IEnumerable<IXunitTestCase> Discover(
-        ITestFrameworkDiscoveryOptions discoveryOptions,
-        ITestMethod tm,
-        IAttributeInfo factAttribute
-    )
-    {
-        var instance = Activator.CreateInstance(tm.TestClass.Class.ToRuntimeType());
-        tm.Method.ToRuntimeMethod().Invoke(instance, null);
-        var testScope = TestBuilder.ConsumeRootScope();
+  public IEnumerable<IXunitTestCase> Discover(
+    ITestFrameworkDiscoveryOptions discoveryOptions,
+    ITestMethod tm,
+    IAttributeInfo factAttribute
+  )
+  {
+    var instance = Activator.CreateInstance(tm.TestClass.Class.ToRuntimeType());
+    tm.Method.ToRuntimeMethod().Invoke(instance, null);
+    var testScope = TestBuilder.ConsumeRootScope();
 
-        yield return new DetestXunitTestCase(testScope, tm);
-    }
+    yield return new DetestXunitTestCase(testScope, tm);
+  }
 }
 
 internal partial class DetestXunitTestCase(TestScope testScope, ITestMethod callingMethod)
-    : IXunitTestCase
+  : IXunitTestCase
 {
-    public Exception? InitializationException { get; }
-    public IMethodInfo Method { get; } = callingMethod.Method;
-    public int Timeout { get; } = 1000;
-    public string DisplayName { get; } = testScope.Description;
-    public string? SkipReason { get; }
-    public ISourceInformation? SourceInformation { get; set; }
-    public ITestMethod TestMethod => callingMethod;
-    public object[] TestMethodArguments { get; } = [];
-    public Dictionary<string, List<string>> Traits { get; } = new();
-    public string UniqueID { get; } = Guid.NewGuid().ToString();
+  public Exception? InitializationException { get; }
+  public IMethodInfo Method { get; } = callingMethod.Method;
+  public int Timeout { get; } = 1000;
+  public string DisplayName { get; } = testScope.Description;
+  public string? SkipReason { get; }
+  public ISourceInformation? SourceInformation { get; set; }
+  public ITestMethod TestMethod => callingMethod;
+  public object[] TestMethodArguments { get; } = [];
+  public Dictionary<string, List<string>> Traits { get; } = new();
+  public string UniqueID { get; } = Guid.NewGuid().ToString();
 
-    public void Deserialize(IXunitSerializationInfo info)
-    {
-        throw new NotImplementedException();
-    }
+  public void Deserialize(IXunitSerializationInfo info)
+  {
+    throw new NotImplementedException();
+  }
 
-    public Task<RunSummary> RunAsync(
-        IMessageSink diagnosticMessageSink,
-        IMessageBus messageBus,
-        object[] constructorArguments,
-        ExceptionAggregator aggregator,
-        CancellationTokenSource cancellationTokenSource
-    )
-    {
-        return new DetestXunitTestCaseRunner(testScope, this, messageBus, aggregator).RunAsync();
-    }
+  public Task<RunSummary> RunAsync(
+    IMessageSink diagnosticMessageSink,
+    IMessageBus messageBus,
+    object[] constructorArguments,
+    ExceptionAggregator aggregator,
+    CancellationTokenSource cancellationTokenSource
+  )
+  {
+    return new DetestXunitTestCaseRunner(testScope, this, messageBus, aggregator).RunAsync();
+  }
 
-    public void Serialize(IXunitSerializationInfo info)
-    {
-        throw new NotImplementedException();
-    }
+  public void Serialize(IXunitSerializationInfo info)
+  {
+    throw new NotImplementedException();
+  }
 }

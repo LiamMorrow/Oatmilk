@@ -5,35 +5,35 @@ using static Detest.TestBuilder;
 
 public class UnitTest3 : DetestTestBase
 {
-    protected override string Description => "My tests with the DetestTestBase";
+  protected override string Description => "My tests with the DetestTestBase";
 
-    protected override void Described()
+  protected override void Described()
+  {
+    BeforeAll(() =>
     {
-        BeforeAll(() =>
-        {
-            Console.WriteLine("BeforeAll");
-        });
+      Console.WriteLine("BeforeAll");
+    });
 
-        AfterEach(
-            (ctx) =>
-            {
-                Console.WriteLine("After " + ctx.Description);
-            }
-        );
+    AfterEach(
+      (ctx) =>
+      {
+        Console.WriteLine("After " + ctx.Description);
+      }
+    );
+    It("Should pass")
+      .When(() =>
+      {
+        Assert.True(true);
+      });
+
+    Describe("Nested")
+      .As(() =>
+      {
         It("Should pass")
-            .When(() =>
-            {
-                Assert.True(true);
-            });
-
-        Describe("Nested")
-            .As(() =>
-            {
-                It("Should pass")
-                    .When(() =>
-                    {
-                        Assert.True(true);
-                    });
-            });
-    }
+          .When(() =>
+          {
+            Assert.True(true);
+          });
+      });
+  }
 }
