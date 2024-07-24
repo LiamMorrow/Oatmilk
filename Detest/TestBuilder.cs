@@ -52,6 +52,23 @@ public static class TestBuilder
         CurrentScope = CurrentScope.Parent;
     }
 
+    public static DescribeBlock Describe(string description)
+    {
+        if (RootScope == null)
+        {
+            CurrentScope = new TestScope(description, null);
+            RootScope = CurrentScope;
+        }
+        else
+        {
+            var parent = CurrentScope;
+            CurrentScope = new TestScope(description, parent);
+            parent?.Children.Add(CurrentScope);
+        }
+
+        return new DescribeBlock(description);
+    }
+
     public static void BeforeAll(Func<Task> body) =>
         CurrentScopeNotNull.TestBeforeAlls.Add(new TestSetupMethod(body));
 
@@ -92,16 +109,37 @@ public static class TestBuilder
             return Task.CompletedTask;
         });
 
-    public static void It(string description, Func<Task> body) =>
-        CurrentScopeNotNull.TestMethods.Add(new TestExecutionMethod(description, body));
+    public static void It(string description, Func<Task> body) => It(description).When(body);
 
-    public static void It(string description, Action body) =>
-        It(
-            description,
-            () =>
+    public static void It(string description, Action body) => It(description).When(body);
+
+    public static ItBlock It(string description) => new(description);
+
+    public record DescribeBlock(string Description)
+    {
+        public void As(Action body)
+        {
+            body();
+            // Pop back to the parent scope after running all the inner scopes
+            CurrentScope = CurrentScopeNotNull.Parent;
+        }
+    }
+
+    public record ItBlock(string Description)
+    {
+        public void When(Action body)
+        {
+            When(() =>
             {
                 body();
                 return Task.CompletedTask;
-            }
-        );
+            });
+        }
+
+        public void When(Func<Task> body)
+        {
+            var tm = new TestExecutionMethod(Description, body);
+            CurrentScopeNotNull.TestMethods.Add(tm);
+        }
+    }
 }

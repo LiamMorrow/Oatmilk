@@ -5,43 +5,34 @@ using static Detest.TestBuilder;
 
 public class UnitTest1
 {
-    [Detest()]
+    [Detest]
     public static void TestScope() =>
-        Describe(
-            "My Sick test",
-            () =>
+        Describe("My Sick test")
+            .As(() =>
             {
                 BeforeAll(() =>
                 {
                     Console.WriteLine("BeforeAll");
                 });
 
-                It(
-                    "Should pass",
-                    () =>
+                It("Should pass")
+                    .When(() =>
                     {
                         Assert.True(true);
-                    }
-                );
+                    });
 
-                Describe(
-                    "Nested",
-                    () =>
+                Describe("Nested")
+                    .As(() =>
                     {
-                        It(
-                            "Should pass",
-                            async () =>
+                        It("Should pass")
+                            .When(() =>
                             {
-                                await Task.Delay(5000);
                                 Assert.True(true);
-                            }
-                        );
+                            });
 
-                        It("Should fail", () => Assert.True(false));
-                    }
-                );
+                        It("Should fail").When(() => Assert.True(false));
+                    });
 
-                It("Should fail", () => Assert.True(false));
-            }
-        );
+                It("Should fail").When(() => Assert.True(false));
+            });
 }
