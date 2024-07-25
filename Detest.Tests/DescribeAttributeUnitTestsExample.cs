@@ -8,15 +8,13 @@ public class DescribeAttributeUnitTestsExample
   [Describe("My tests with the DescribeAttribute")]
   public void Spec()
   {
-    BeforeAll(() =>
-    {
-      Console.WriteLine("BeforeAll");
+    BeforeAll(() => {
+      // Runs before all tests in this and nested scopes
     });
 
     AfterEach(
-      (ctx) =>
-      {
-        Console.WriteLine("After " + ctx.Description);
+      (ctx) => {
+        // Runs after each of the tests in this and nested scopes
       }
     );
     It("Should pass")

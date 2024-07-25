@@ -10,15 +10,13 @@ public class FluentUnitTestsExample
     Describe("My tests using the fluent syntax")
       .As(() =>
       {
-        BeforeAll(() =>
-        {
-          Console.WriteLine("BeforeAll");
+        BeforeAll(() => {
+          // Runs before all tests in this and nested scopes
         });
 
         AfterEach(
-          (ctx) =>
-          {
-            Console.WriteLine("After " + ctx.Description);
+          (ctx) => {
+            // Runs after each of the tests in this and nested scopes
           }
         );
 
