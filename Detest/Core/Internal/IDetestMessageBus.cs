@@ -1,7 +1,9 @@
-namespace Detest.Core;
+namespace Detest.Core.Internal;
 
 internal interface IDetestMessageBus
 {
+  void OnBeforeTestSetupStarting(TestBlock testBlock, TestScope testScope);
+  void OnBeforeTestSetupFinished(TestBlock testBlock, TestScope testScope);
   public void OnTestFailed(
     TestBlock testBlock,
     TestScope testScope,
@@ -28,4 +30,6 @@ internal interface IDetestMessageBus
   public void OnTestSkipped(TestBlock testBlock, TestScope testScope, string reason);
 
   public void OnTestStarting(TestBlock testBlock, TestScope testScope);
+  void OnAfterTestSetupStarting(TestBlock testBlock, TestScope testScope);
+  void OnAfterTestSetupFinished(TestBlock testBlock, TestScope testScope);
 }

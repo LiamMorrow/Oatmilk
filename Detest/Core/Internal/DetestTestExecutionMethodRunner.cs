@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Text;
 
-namespace Detest.Core;
+namespace Detest.Core.Internal;
 
 internal class DetestTestBlockRunner(
   TestScope testScope,
@@ -14,13 +14,35 @@ internal class DetestTestBlockRunner(
 
   public async Task<DetestRunSummary> RunAsync()
   {
-    var result = new DetestRunSummary();
+    var result = new DetestRunSummary(Total: 1);
+    var sw = Stopwatch.StartNew();
 
+    messageBus.OnBeforeTestSetupStarting(testBlock, testScope);
     await RunBeforeAllsIncludingParentsAsync(testScope);
+    await RunBeforeEachesIncludingParentsAsync(testScope);
+    messageBus.OnBeforeTestSetupFinished(testBlock, testScope);
 
-    result.Aggregate(await RunTestAsync(testScope));
+    messageBus.OnTestStarting(testBlock, testScope);
+    var finishedTestContext = new FinishedTestContext(true);
+    try
+    {
+      await testBlock.Body.Invoke();
+      result = result with { Time = sw.Elapsed };
+      messageBus.OnTestPassed(testBlock, testScope, result.Time, "");
+    }
+    catch (Exception ex)
+    {
+      result = result with { Time = sw.Elapsed, Failed = 1 };
+      messageBus.OnTestFailed(testBlock, testScope, ex, result.Time, "");
+      finishedTestContext = finishedTestContext with { Passed = false };
+    }
 
+    messageBus.OnTestFinished(testBlock, testScope, result.Time, "");
+
+    messageBus.OnAfterTestSetupStarting(testBlock, testScope);
+    await RunAfterEachesIncludingParentsAsync(finishedTestContext, testScope);
     await RunAfterAllsIncludingParentsAsync(testScope);
+    messageBus.OnAfterTestSetupFinished(testBlock, testScope);
 
     return result;
   }
@@ -57,31 +79,6 @@ internal class DetestTestBlockRunner(
       await RunAfterAllsIncludingParentsAsync(testScope.Parent);
     }
     testScope.HasRunAfterAlls = true;
-  }
-
-  private async Task<DetestRunSummary> RunTestAsync(TestScope testScope)
-  {
-    var result = new DetestRunSummary(Total: 1);
-    await RunBeforeEachesIncludingParentsAsync(testScope);
-    messageBus.OnTestStarting(testBlock, testScope);
-    var sw = Stopwatch.StartNew();
-    var finishedTestContext = new FinishedTestContext(true, testBlock.GetDescription(testScope));
-    try
-    {
-      await testBlock.Body.Invoke();
-      result = result with { Time = sw.Elapsed };
-      messageBus.OnTestPassed(testBlock, testScope, result.Time, "");
-    }
-    catch (Exception ex)
-    {
-      result = result with { Time = sw.Elapsed, Failed = 1 };
-      messageBus.OnTestFailed(testBlock, testScope, ex, result.Time, "");
-      finishedTestContext = finishedTestContext with { Passed = false };
-    }
-    await RunAfterEachesIncludingParentsAsync(finishedTestContext, testScope);
-    messageBus.OnTestFinished(testBlock, testScope, result.Time, "");
-
-    return result;
   }
 
   private async Task RunAfterEachesIncludingParentsAsync(

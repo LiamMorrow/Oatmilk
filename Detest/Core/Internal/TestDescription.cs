@@ -51,5 +51,3 @@ internal record TestBlock(Func<Task> Body, TestMetadata Metadata)
     return sb.ToString();
   }
 }
-
-public record FinishedTestContext(bool Passed, string Description);

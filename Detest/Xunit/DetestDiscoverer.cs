@@ -1,18 +1,54 @@
 using System.Diagnostics;
 using Detest.Core;
+using Detest.Core.Internal;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace Detest.Xunit;
 
+/// <summary>
+/// Marks a test method as a method containing Detest tests described with the various
+/// <see cref="TestBuilder"/> methods.
+/// Alternatively use the <see cref="DescribeAttribute"/> to begin a describe block implicitly.
+/// </summary>
+/// <example>
+/// <code>
+/// [Detest]
+/// public void Spec()
+/// {
+///  Describe("A test suite", () =>
+///  {
+///     It("should pass", () => Assert.True(true));
+///  });
+///  }
+///  </code>
+///  </example>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 [XunitTestCaseDiscoverer("Detest.Xunit.DetestDiscoverer", "Detest")]
 public sealed class DetestAttribute : FactAttribute { }
+
+/// <summary>
+/// Marks a test method as a method containing Detest tests described with the various
+/// <see cref="TestBuilder"/> methods. Implicitly begins a describe block.
+/// </summary>
+/// <example>
+/// <code>
+/// [Describe("A test suite")]
+/// public void Spec()
+/// {
+///    It("should pass", () => Assert.True(true));
+/// }
+/// </code>
+/// </example>
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 [XunitTestCaseDiscoverer("Detest.Xunit.DescribeDiscoverer", "Detest")]
 public sealed class DescribeAttribute(string Description) : FactAttribute
 {
+  /// <summary>
+  /// The description of the test suite.
+  /// This is passed to the <see cref="TestBuilder.Describe(string, Action)"/> method.
+  /// </summary>
   public string Description { get; } = Description;
 }
 
@@ -69,19 +105,12 @@ internal class DetestDiscoverer : IXunitTestCaseDiscoverer
 }
 
 [Serializable]
-internal partial class DetestXunitTestCase : IXunitTestCase
+internal partial class DetestXunitTestCase(
+  TestScope testScope,
+  TestBlock testExecutionMethod,
+  ITestMethod callingMethod
+) : IXunitTestCase
 {
-  public DetestXunitTestCase(
-    TestScope testScope,
-    TestBlock testExecutionMethod,
-    ITestMethod callingMethod
-  )
-  {
-    TestScope = testScope;
-    TestBlock = testExecutionMethod;
-    TestMethod = callingMethod;
-  }
-
   [Obsolete("Here for serializable")]
   public DetestXunitTestCase()
     : this(null!, null!, null!) { }
@@ -103,9 +132,9 @@ internal partial class DetestXunitTestCase : IXunitTestCase
     }
     set { }
   }
-  public TestScope TestScope { get; set; }
-  public TestBlock TestBlock { get; set; }
-  public ITestMethod TestMethod { get; set; }
+  public TestScope TestScope { get; set; } = testScope;
+  public TestBlock TestBlock { get; set; } = testExecutionMethod;
+  public ITestMethod TestMethod { get; set; } = callingMethod;
   public object[] TestMethodArguments { get; set; } = [];
   public Dictionary<string, List<string>> Traits { get; set; } = [];
   public string UniqueID =>

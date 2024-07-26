@@ -1,4 +1,5 @@
 using Detest.Core;
+using Detest.Core.Internal;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
@@ -7,6 +8,26 @@ namespace Detest.Xunit;
 internal class XunitDetestMessageBus(IMessageBus messageBus, IXunitTestCase xunitTestMethod)
   : IDetestMessageBus
 {
+  public void OnAfterTestSetupFinished(TestBlock testBlock, TestScope testScope)
+  {
+    messageBus.QueueMessage(new AfterTestStarting(GetTest(testBlock, testScope), "AfterTest"));
+  }
+
+  public void OnAfterTestSetupStarting(TestBlock testBlock, TestScope testScope)
+  {
+    messageBus.QueueMessage(new AfterTestStarting(GetTest(testBlock, testScope), "AfterTest"));
+  }
+
+  public void OnBeforeTestSetupFinished(TestBlock testBlock, TestScope testScope)
+  {
+    messageBus.QueueMessage(new BeforeTestFinished(GetTest(testBlock, testScope), "BeforeTest"));
+  }
+
+  public void OnBeforeTestSetupStarting(TestBlock testBlock, TestScope testScope)
+  {
+    messageBus.QueueMessage(new BeforeTestStarting(GetTest(testBlock, testScope), "BeforeTest"));
+  }
+
   public void OnTestFailed(
     TestBlock testBlock,
     TestScope testScope,
