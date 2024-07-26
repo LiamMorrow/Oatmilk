@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <Authors>Liam Morrow</Authors>
     <Title>
-      Detest
+      Detestable
     </Title>
     <Description>
       An Xunit extension for c# that allows for more readable tests, heavily inspired by Jest
@@ -15,7 +15,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <IncludeSource>true</IncludeSource>
-    <RepositoryUrl>https://github.com/LiamMorrow/Detest</RepositoryUrl>
+    <RepositoryUrl>https://github.com/LiamMorrow/Detestable</RepositoryUrl>
     <PackageReleaseNotes>
       Initial release
     </PackageReleaseNotes>

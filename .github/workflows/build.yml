@@ -20,7 +20,7 @@ jobs:
           dotnet-version: 8.0.300
       - name: Build Core
         run: dotnet build --configuration Release
-        working-directory: ./Detest
+        working-directory: ./Detestable
       - name: Build Xunit
         run: dotnet build --configuration Release
-        working-directory: ./Detest.Xunit
+        working-directory: ./Detestable.Xunit

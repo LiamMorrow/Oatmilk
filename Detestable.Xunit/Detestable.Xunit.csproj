@@ -2,14 +2,14 @@
 
 
   <PropertyGroup>
-    <PackageId>Detest.Xunit</PackageId>
+    <PackageId>Detestable.Xunit</PackageId>
     <OutputType>Library</OutputType>
     <IsPackable>true</IsPackable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Detest\Detest.csproj" />
+    <ProjectReference Include="..\Detestable\Detestable.csproj" />
   </ItemGroup>
 
   <ItemGroup>
