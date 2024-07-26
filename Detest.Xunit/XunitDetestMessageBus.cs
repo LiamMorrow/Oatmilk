@@ -1,11 +1,11 @@
-using Detestable.Internal;
+using Detest.Internal;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace Detestable.Xunit;
+namespace Detest.Xunit;
 
-internal class XunitDetestableMessageBus(IMessageBus messageBus, IXunitTestCase xunitTestMethod)
-  : IDetestableMessageBus
+internal class XunitDetestMessageBus(IMessageBus messageBus, IXunitTestCase xunitTestMethod)
+  : IDetestMessageBus
 {
   public void OnAfterTestSetupFinished(TestBlock testBlock, TestScope testScope)
   {

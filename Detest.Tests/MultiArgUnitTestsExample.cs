@@ -1,8 +1,8 @@
-namespace Detestable.Tests;
+namespace Detest.Tests;
 
 public class MultiArgUnitTestsExample
 {
-  [Detestable]
+  [Detest]
   public static void TestScope() =>
     Describe(
       "My tests using the multi arg syntax",

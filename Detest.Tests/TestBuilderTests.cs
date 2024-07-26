@@ -1,7 +1,7 @@
-using Detestable;
+using Detest;
 using FluentAssertions;
 
-namespace Detestable.Tests;
+namespace Detest.Tests;
 
 public class TestBuilderTests
 {

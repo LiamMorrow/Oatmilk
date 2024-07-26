@@ -1,6 +1,6 @@
 using FluentAssertions;
 
-namespace Detestable.Tests;
+namespace Detest.Tests;
 
 public class TestExecution
 {

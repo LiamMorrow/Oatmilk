@@ -15,9 +15,9 @@ jobs:
         with:
           dotnet-version: 8.0.300
       - name: Pack Core
-        run: dotnet pack --configuration Release ./Detestable
+        run: dotnet pack --configuration Release ./Detest
       - name: Pack Xunit
-        run: dotnet pack --configuration Release ./Detestable.Xunit
+        run: dotnet pack --configuration Release ./Detest.Xunit
       - name: Push All
         run: find . \( -name "*.nupkg" \) | xargs -n1 dotnet nuget push -s nuget.org -k $PUSH_KEY --skip-duplicate
         env:

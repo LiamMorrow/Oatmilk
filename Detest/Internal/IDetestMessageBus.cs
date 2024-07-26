@@ -1,6 +1,6 @@
-namespace Detestable.Internal;
+namespace Detest.Internal;
 
-internal interface IDetestableMessageBus
+internal interface IDetestMessageBus
 {
   void OnBeforeTestSetupStarting(TestBlock testBlock, TestScope testScope);
   void OnBeforeTestSetupFinished(TestBlock testBlock, TestScope testScope);

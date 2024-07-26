@@ -1,8 +1,8 @@
-﻿namespace Detestable;
+﻿namespace Detest;
 
 /// <summary>
 /// Provides methods for building test suites using a declarative syntax.
-/// Generally should be used with the <c>using static Detestable.TestBuilder</c> directive.
+/// Generally should be used with the <c>using static Detest.TestBuilder</c> directive.
 /// </summary>
 public static partial class TestBuilder
 {
