@@ -31,7 +31,7 @@ using static Detestable.TestBuilder;
 public class MyTestClass
 {
     [Describe("My Test Suite")]
-    public void MyTestMethod()
+    public void Spec()
     {
         // Describe as many tests as you'd like
         It("Should pass", () => Assert.True(true));
@@ -62,7 +62,7 @@ Example:
 public class MyTestClass
 {
     [Describe("My Test Suite")]
-    public void MyTestMethod()
+    public void Spec()
     {
         BeforeAll(()=>
         {
