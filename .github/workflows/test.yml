@@ -21,7 +21,8 @@ jobs:
         with:
           dotnet-version: 8.0.300
       - name: Run tests
-        run: dotnet test ./Detest.Tests  --collect:"XPlat Code Coverage"
+        run: dotnet test --collect:"XPlat Code Coverage"
+        working-directory: ./Detest.Tests
       - name: Code Coverage Summary
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
