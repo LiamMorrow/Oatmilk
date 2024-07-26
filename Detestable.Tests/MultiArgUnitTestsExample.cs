@@ -25,6 +25,13 @@ public class MultiArgUnitTestsExample
             Assert.True(true);
           }
         );
+        It.Each(
+          ["element", "in", "an", "enumerated", "test"],
+          x => $"Should pass for {x}",
+          (i) => {
+            //
+          }
+        );
       }
     );
 }

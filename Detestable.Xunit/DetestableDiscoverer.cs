@@ -65,7 +65,7 @@ internal class DescribeDiscoverer : DetestableDiscoverer
 
 internal class DetestableDiscoverer : IXunitTestCaseDiscoverer
 {
-  internal static IEnumerable<IXunitTestCase> TraverseScopesAndYieldTestCases(
+  internal static IEnumerable<DetestableXunitTestCase> TraverseScopesAndYieldTestCases(
     TestScope testScope,
     ITestMethod callingMethod
   )
@@ -98,7 +98,12 @@ internal class DetestableDiscoverer : IXunitTestCaseDiscoverer
   )
   {
     var testScope = GetTestScope(tm, factAttribute);
-    return TraverseScopesAndYieldTestCases(testScope, tm);
+    var cases = TraverseScopesAndYieldTestCases(testScope, tm).ToList();
+    if (cases.Any(x => x.TestBlock.Metadata.IsOnly))
+    {
+      return cases.Where(x => x.TestBlock.Metadata.IsOnly);
+    }
+    return cases;
   }
 }
 

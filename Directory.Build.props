@@ -19,7 +19,7 @@
     <PackageReleaseNotes>
       Initial release
     </PackageReleaseNotes>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     </PropertyGroup>
 </Project>

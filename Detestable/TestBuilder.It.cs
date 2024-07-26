@@ -2,7 +2,6 @@
 
 namespace Detestable;
 
-#pragma warning disable RS0026 // Do not add multiple public overloads with optional parameters - we need them to get the line number and file path of the caller
 /// <summary>
 /// Provides methods for building test suites using a declarative syntax.
 /// Generally should be used with the <c>using static Detestable.TestBuilder</c> directive.
@@ -50,7 +49,7 @@ public static partial class TestBuilder
     string description,
     [CallerLineNumber] int lineNumber = 0,
     [CallerFilePath] string filePath = ""
-  ) => new(description, lineNumber, filePath);
+  ) => new(description, lineNumber, filePath, false);
 
   /// <summary>
   /// Adds a test to the current scope, configured with a fluent API.
@@ -58,7 +57,8 @@ public static partial class TestBuilder
   /// <param name="Description">The description of the test</param>
   /// <param name="LineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="FilePath">Leave unset, used by the runtime to support running tests via the IDE</param>
-  public record ItBlock(string Description, int LineNumber, string FilePath)
+  /// <param name="IsOnly">Should be the only test run in the suite</param>
+  public record ItBlock(string Description, int LineNumber, string FilePath, bool IsOnly)
   {
     /// <summary>
     /// Describes the test body.
@@ -87,11 +87,11 @@ public static partial class TestBuilder
           Description: Description,
           ScopeIndex: CurrentScopeNotNull.TestMethods.Count,
           LineNumber: LineNumber,
-          FilePath: FilePath
+          FilePath: FilePath,
+          IsOnly: IsOnly
         )
       );
       CurrentScopeNotNull.TestMethods.Add(tm);
     }
   }
 }
-#pragma warning restore RS0026 // Do not add multiple public overloads with optional parameters

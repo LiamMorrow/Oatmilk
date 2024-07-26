@@ -19,8 +19,8 @@ jobs:
         with:
           dotnet-version: 8.0.300
       - name: Build Core
-        run: dotnet build --configuration Release
+        run: dotnet build --configuration Release /p:TreatingWarningsAsErrors=true
         working-directory: ./Detestable
       - name: Build Xunit
-        run: dotnet build --configuration Release
+        run: dotnet build --configuration Release  /p:TreatingWarningsAsErrors=true
         working-directory: ./Detestable.Xunit

@@ -7,10 +7,10 @@
 public static partial class TestBuilder
 {
   [ThreadStatic]
-  private static TestScope? CurrentScope;
+  internal static TestScope? CurrentScope;
 
   [ThreadStatic]
-  private static TestScope? RootScope;
+  internal static TestScope? RootScope;
 
   internal static TestScope ConsumeRootScope()
   {
@@ -23,7 +23,7 @@ public static partial class TestBuilder
     return rs;
   }
 
-  private static TestScope CurrentScopeNotNull =>
+  internal static TestScope CurrentScopeNotNull =>
     CurrentScope
     ?? throw new InvalidOperationException("No current scope. Has Describe been called?");
 }

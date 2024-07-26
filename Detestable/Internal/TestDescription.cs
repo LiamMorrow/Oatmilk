@@ -34,7 +34,13 @@ internal record TestSetupMethod(Func<Task> Body);
 
 internal record TestAfterEachMethod(Func<FinishedTestContext, Task> Body);
 
-internal record TestMetadata(string Description, int ScopeIndex, int LineNumber, string FilePath);
+internal record TestMetadata(
+  string Description,
+  int ScopeIndex,
+  int LineNumber,
+  string FilePath,
+  bool IsOnly
+);
 
 internal record TestBlock(Func<Task> Body, TestMetadata Metadata)
 {
