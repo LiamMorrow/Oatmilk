@@ -13,7 +13,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.100
+          dotnet-version: 8.0.300
       - name: Pack Core
         run: dotnet pack --configuration Release ./Detest
       - name: Pack Xunit
