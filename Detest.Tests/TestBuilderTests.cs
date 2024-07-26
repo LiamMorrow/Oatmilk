@@ -1,4 +1,4 @@
-using Detest.Core;
+using Detest;
 using FluentAssertions;
 
 namespace Detest.Tests;

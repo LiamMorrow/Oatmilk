@@ -1,6 +1,4 @@
-using System.Diagnostics;
-using Detest.Core;
-using Detest.Core.Internal;
+using Detest.Internal;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
@@ -24,7 +22,7 @@ namespace Detest.Xunit;
 ///  </code>
 ///  </example>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-[XunitTestCaseDiscoverer("Detest.Xunit.DetestDiscoverer", "Detest")]
+[XunitTestCaseDiscoverer("Detest.Xunit.DetestDiscoverer", "Detest.Xunit")]
 public sealed class DetestAttribute : FactAttribute { }
 
 /// <summary>
@@ -42,7 +40,7 @@ public sealed class DetestAttribute : FactAttribute { }
 /// </example>
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-[XunitTestCaseDiscoverer("Detest.Xunit.DescribeDiscoverer", "Detest")]
+[XunitTestCaseDiscoverer("Detest.Xunit.DescribeDiscoverer", "Detest.Xunit")]
 public sealed class DescribeAttribute(string Description) : FactAttribute
 {
   /// <summary>

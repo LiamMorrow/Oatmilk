@@ -1,4 +1,4 @@
-namespace Detest.Core;
+namespace Detest;
 
 /// <summary>
 /// Represents the context of a test that has finished running.

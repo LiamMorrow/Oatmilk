@@ -1,0 +1,6 @@
+#nullable enable
+Detest.Xunit.DescribeAttribute
+Detest.Xunit.DescribeAttribute.DescribeAttribute(string! Description) -> void
+Detest.Xunit.DescribeAttribute.Description.get -> string!
+Detest.Xunit.DetestAttribute
+Detest.Xunit.DetestAttribute.DetestAttribute() -> void

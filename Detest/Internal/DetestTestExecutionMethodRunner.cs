@@ -1,8 +1,6 @@
-using System;
 using System.Diagnostics;
-using System.Text;
 
-namespace Detest.Core.Internal;
+namespace Detest.Internal;
 
 internal class DetestTestBlockRunner(
   TestScope testScope,

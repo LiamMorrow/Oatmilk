@@ -1,5 +1,4 @@
-using Detest.Core;
-using Detest.Core.Internal;
+using Detest.Internal;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 

@@ -1,4 +1,4 @@
-namespace Detest.Core.Internal;
+namespace Detest.Internal;
 
 internal interface IDetestMessageBus
 {

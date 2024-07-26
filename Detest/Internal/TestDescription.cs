@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Detest.Core;
+namespace Detest;
 
 internal record TestScope(string Description, TestScope? Parent)
 {
