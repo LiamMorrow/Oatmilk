@@ -1,17 +1,17 @@
-using Detest.Internal;
+using Detestable.Internal;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace Detest.Xunit;
+namespace Detestable.Xunit;
 
 /// <summary>
-/// Marks a test method as a method containing Detest tests described with the various
+/// Marks a test method as a method containing Detestable tests described with the various
 /// <see cref="TestBuilder"/> methods.
 /// Alternatively use the <see cref="DescribeAttribute"/> to begin a describe block implicitly.
 /// </summary>
 /// <example>
 /// <code>
-/// [Detest]
+/// [Detestable]
 /// public void Spec()
 /// {
 ///  Describe("A test suite", () =>
@@ -22,11 +22,11 @@ namespace Detest.Xunit;
 ///  </code>
 ///  </example>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-[XunitTestCaseDiscoverer("Detest.Xunit.DetestDiscoverer", "Detest.Xunit")]
-public sealed class DetestAttribute : FactAttribute { }
+[XunitTestCaseDiscoverer("Detestable.Xunit.DetestableDiscoverer", "Detestable.Xunit")]
+public sealed class DetestableAttribute : FactAttribute { }
 
 /// <summary>
-/// Marks a test method as a method containing Detest tests described with the various
+/// Marks a test method as a method containing Detestable tests described with the various
 /// <see cref="TestBuilder"/> methods. Implicitly begins a describe block.
 /// </summary>
 /// <example>
@@ -40,7 +40,7 @@ public sealed class DetestAttribute : FactAttribute { }
 /// </example>
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-[XunitTestCaseDiscoverer("Detest.Xunit.DescribeDiscoverer", "Detest.Xunit")]
+[XunitTestCaseDiscoverer("Detestable.Xunit.DescribeDiscoverer", "Detestable.Xunit")]
 public sealed class DescribeAttribute(string Description) : FactAttribute
 {
   /// <summary>
@@ -50,7 +50,7 @@ public sealed class DescribeAttribute(string Description) : FactAttribute
   public string Description { get; } = Description;
 }
 
-internal class DescribeDiscoverer : DetestDiscoverer
+internal class DescribeDiscoverer : DetestableDiscoverer
 {
   protected override TestScope GetTestScope(ITestMethod tm, IAttributeInfo attribute)
   {
@@ -63,7 +63,7 @@ internal class DescribeDiscoverer : DetestDiscoverer
   }
 }
 
-internal class DetestDiscoverer : IXunitTestCaseDiscoverer
+internal class DetestableDiscoverer : IXunitTestCaseDiscoverer
 {
   internal static IEnumerable<IXunitTestCase> TraverseScopesAndYieldTestCases(
     TestScope testScope,
@@ -72,7 +72,7 @@ internal class DetestDiscoverer : IXunitTestCaseDiscoverer
   {
     foreach (var testMethod in testScope.TestMethods)
     {
-      yield return new DetestXunitTestCase(testScope, testMethod, callingMethod);
+      yield return new DetestableXunitTestCase(testScope, testMethod, callingMethod);
     }
 
     foreach (var childScope in testScope.Children)
@@ -103,14 +103,14 @@ internal class DetestDiscoverer : IXunitTestCaseDiscoverer
 }
 
 [Serializable]
-internal partial class DetestXunitTestCase(
+internal partial class DetestableXunitTestCase(
   TestScope testScope,
   TestBlock testExecutionMethod,
   ITestMethod callingMethod
 ) : IXunitTestCase
 {
   [Obsolete("Here for serializable")]
-  public DetestXunitTestCase()
+  public DetestableXunitTestCase()
     : this(null!, null!, null!) { }
 
   public Exception? InitializationException { get; }
@@ -183,10 +183,10 @@ internal partial class DetestXunitTestCase(
     CancellationTokenSource cancellationTokenSource
   )
   {
-    var result = await new DetestTestBlockRunner(
+    var result = await new DetestableTestBlockRunner(
       TestScope,
       TestBlock,
-      new XunitDetestMessageBus(messageBus, this)
+      new XunitDetestableMessageBus(messageBus, this)
     ).RunAsync();
 
     return new RunSummary

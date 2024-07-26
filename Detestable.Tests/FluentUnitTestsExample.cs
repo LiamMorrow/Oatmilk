@@ -1,8 +1,8 @@
-namespace Detest.Tests;
+namespace Detestable.Tests;
 
 public class FluentUnitTestsExample
 {
-  [Detest]
+  [Detestable]
   public static void TestScope()
   {
     Describe("My tests using the fluent syntax")

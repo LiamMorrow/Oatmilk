@@ -1,6 +1,6 @@
-namespace Detest.Internal;
+namespace Detestable.Internal;
 
-internal record DetestRunSummary(
+internal record DetestableRunSummary(
   int Total = 0,
   int Passed = 0,
   int Failed = 0,
@@ -8,7 +8,7 @@ internal record DetestRunSummary(
   TimeSpan Time = default
 )
 {
-  public DetestRunSummary Aggregate(DetestRunSummary runSummary)
+  public DetestableRunSummary Aggregate(DetestableRunSummary runSummary)
   {
     return this with
     {

@@ -1,4 +1,4 @@
-namespace Detest;
+namespace Detestable;
 
 /// <summary>
 /// Represents the context of a test that has finished running.

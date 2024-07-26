@@ -1,4 +1,4 @@
-namespace Detest.Tests;
+namespace Detestable.Tests;
 
 public class DescribeAttributeUnitTestsExample
 {

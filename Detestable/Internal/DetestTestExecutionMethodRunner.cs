@@ -1,18 +1,18 @@
 using System.Diagnostics;
 
-namespace Detest.Internal;
+namespace Detestable.Internal;
 
-internal class DetestTestBlockRunner(
+internal class DetestableTestBlockRunner(
   TestScope testScope,
   TestBlock testBlock,
-  IDetestMessageBus messageBus
+  IDetestableMessageBus messageBus
 )
 {
   private readonly TestScope testScope = testScope;
 
-  public async Task<DetestRunSummary> RunAsync()
+  public async Task<DetestableRunSummary> RunAsync()
   {
-    var result = new DetestRunSummary(Total: 1);
+    var result = new DetestableRunSummary(Total: 1);
     var sw = Stopwatch.StartNew();
 
     messageBus.OnBeforeTestSetupStarting(testBlock, testScope);

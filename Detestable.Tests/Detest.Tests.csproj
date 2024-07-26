@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Detest.Xunit\Detest.Xunit.csproj" />
+    <ProjectReference Include="..\Detestable.Xunit\Detestable.Xunit.csproj" />
   </ItemGroup>
 
 </Project>
