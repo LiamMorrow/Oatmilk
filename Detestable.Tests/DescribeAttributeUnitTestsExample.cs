@@ -1,7 +1,4 @@
-namespace Detest.Tests;
-
-using Xunit.Sdk;
-using static Detest.TestBuilder;
+namespace Detestable.Tests;
 
 public class DescribeAttributeUnitTestsExample
 {

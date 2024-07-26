@@ -1,12 +1,10 @@
-namespace Detest.Tests;
-
-using Xunit.Sdk;
-using static Detest.TestBuilder;
+namespace Detestable.Tests;
 
 public class FluentUnitTestsExample
 {
-  [Detest]
-  public static void TestScope() =>
+  [Detestable]
+  public static void TestScope()
+  {
     Describe("My tests using the fluent syntax")
       .As(() =>
       {
@@ -36,4 +34,5 @@ public class FluentUnitTestsExample
               });
           });
       });
+  }
 }
