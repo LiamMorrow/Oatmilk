@@ -137,3 +137,7 @@ Describe("My test suite")
         // My describe block
     })
 ```
+
+### Examples
+
+See the [Detestable.Tests package](./Detestable.Tests/) for examples of how tests can be written. All tests for Detestable are written in it!
