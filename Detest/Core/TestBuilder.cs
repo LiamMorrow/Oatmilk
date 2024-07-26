@@ -1,4 +1,6 @@
-﻿namespace Detest;
+﻿using System.Runtime.CompilerServices;
+
+namespace Detest.Core;
 
 public static class TestBuilder
 {
@@ -113,11 +115,25 @@ public static class TestBuilder
       return Task.CompletedTask;
     });
 
-  public static void It(string description, Func<Task> body) => It(description).When(body);
+  public static void It(
+    string description,
+    Func<Task> body,
+    [CallerLineNumber] int lineNumber = 0,
+    [CallerFilePath] string filePath = ""
+  ) => It(description, lineNumber, filePath).When(body);
 
-  public static void It(string description, Action body) => It(description).When(body);
+  public static void It(
+    string description,
+    Action body,
+    [CallerLineNumber] int lineNumber = 0,
+    [CallerFilePath] string filePath = ""
+  ) => It(description, lineNumber, filePath).When(body);
 
-  public static ItBlock It(string description) => new(description);
+  public static ItBlock It(
+    string description,
+    [CallerLineNumber] int lineNumber = 0,
+    [CallerFilePath] string filePath = ""
+  ) => new(description, lineNumber, filePath);
 
   public record DescribeBlock(string Description)
   {
@@ -129,7 +145,7 @@ public static class TestBuilder
     }
   }
 
-  public record ItBlock(string Description)
+  public record ItBlock(string Description, int LineNumber, string FilePath)
   {
     public void When(Action body)
     {
@@ -142,7 +158,15 @@ public static class TestBuilder
 
     public void When(Func<Task> body)
     {
-      var tm = new TestExecutionMethod(Description, body);
+      var tm = new TestBlock(
+        body,
+        new(
+          Description: Description,
+          ScopeIndex: CurrentScopeNotNull.TestMethods.Count,
+          LineNumber: LineNumber,
+          FilePath: FilePath
+        )
+      );
       CurrentScopeNotNull.TestMethods.Add(tm);
     }
   }

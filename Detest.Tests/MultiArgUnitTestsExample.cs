@@ -1,7 +1,5 @@
 namespace Detest.Tests;
 
-using static Detest.TestBuilder;
-
 public class MultiArgUnitTestsExample
 {
   [Detest]

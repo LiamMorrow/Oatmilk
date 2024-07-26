@@ -1,8 +1,5 @@
 namespace Detest.Tests;
 
-using Xunit.Sdk;
-using static Detest.TestBuilder;
-
 public class DescribeAttributeUnitTestsExample
 {
   [Describe("My tests with the DescribeAttribute")]
