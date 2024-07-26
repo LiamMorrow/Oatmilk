@@ -1,5 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+
+  <PropertyGroup>
+    <PackageId>Detest.Xunit</PackageId>
+    <OutputType>Library</OutputType>
+    <IsPackable>true</IsPackable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Detest\Detest.csproj" />
   </ItemGroup>
@@ -7,13 +15,6 @@
   <ItemGroup>
     <PackageReference Include="xunit.core" Version="2.9.0" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
 
   <ItemGroup>
     <Using Include="Xunit" />

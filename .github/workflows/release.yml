@@ -1,0 +1,24 @@
+name: release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.100
+      - name: Pack Core
+        run: dotnet pack --configuration Release ./Detest
+      - name: Pack Xunit
+        run: dotnet pack --configuration Release ./Detest.Xunit
+      - name: Push All
+        run: find . \( -name "*.nupkg" \) | xargs -n1 dotnet nuget push -s nuget.org -k $PUSH_KEY --skip-duplicate
+        env:
+          PUSH_KEY: ${{ secrets. NUGET_PUSH_KEY }}
