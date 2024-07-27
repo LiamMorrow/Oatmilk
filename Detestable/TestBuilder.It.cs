@@ -2,10 +2,6 @@
 
 namespace Detestable;
 
-/// <summary>
-/// Provides methods for building test suites using a declarative syntax.
-/// Generally should be used with the <c>using static Detestable.TestBuilder</c> directive.
-/// </summary>
 public static partial class TestBuilder
 {
   /// <summary>
@@ -106,14 +102,15 @@ public static partial class TestBuilder
   /// <summary>
   /// Adds a test to the current scope, configured with a fluent API.
   /// </summary>
-  /// <param name="Description">The description of the tests. This supports a format string taking</param>
+  /// <param name="Values">The values to enumerate. An It block will be generated for every element in the list.</param>
+  /// <param name="DescriptionResolver">A callback function to generate the description of the tests.  It is passed each value from <paramref name="Values"/></param>
   /// <param name="IsOnly">Should be the only test run in the suite</param>
   /// <param name="IsSkipped">Should be skipped</param>
   /// <param name="LineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="FilePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   public record ItEachBlock<T>(
     IEnumerable<T> Values,
-    Func<T, string> Description,
+    Func<T, string> DescriptionResolver,
     bool IsOnly,
     bool IsSkipped,
     int LineNumber,
@@ -149,7 +146,7 @@ public static partial class TestBuilder
         var tm = new TestBlock(
           () => body(val),
           new(
-            Description: Description(val),
+            Description: DescriptionResolver(val),
             ScopeIndex: CurrentScopeNotNull.TestMethods.Count,
             LineNumber: LineNumber,
             FilePath: FilePath,

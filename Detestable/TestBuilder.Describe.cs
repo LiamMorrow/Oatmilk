@@ -2,10 +2,6 @@
 
 namespace Detestable;
 
-/// <summary>
-/// Provides methods for building test suites using a declarative syntax.
-/// Generally should be used with the <c>using static Detestable.TestBuilder</c> directive.
-/// </summary>
 public static partial class TestBuilder
 {
   internal const string InvalidDescribeAsyncMethodCallMessage = """
@@ -21,7 +17,7 @@ public static partial class TestBuilder
   /// <param name="description"></param>
   /// <param name="body"></param>
   /// <exception cref="InvalidOperationException">This method will always throw an exception.</exception>
-  [Obsolete(InvalidDescribeAsyncMethodCallMessage)]
+  [Obsolete(InvalidDescribeAsyncMethodCallMessage, error: true)]
   public static void Describe(string description, Func<Task> body) =>
     throw new InvalidOperationException(InvalidDescribeAsyncMethodCallMessage);
 
@@ -31,6 +27,8 @@ public static partial class TestBuilder
   /// </summary>
   /// <param name="description">The description of this block of the test suite.</param>
   /// <param name="body">A callback which is immediately invoked to describe tests</param>
+  /// <param name="lineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
+  /// <param name="filePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   public static void Describe(
     string description,
     Action body,
@@ -39,10 +37,12 @@ public static partial class TestBuilder
   ) => Describe(description, lineNumber, filePath).As(body);
 
   /// <summary>
-  /// Describes a suite of tests using a fluent syntax.  Specify the body of the suite using the <see cref="DescribeBlock.As" /> method.
+  /// Describes a suite of tests using a fluent syntax.  Specify the body of the suite using the <see cref="DescribeBlock.As(Action)" /> method.
   /// </summary>
   /// <param name="description">The description of this block of the test suite.</param>
   /// <returns>A <see cref="DescribeBlock" /> object which allows for the creation of nested test suites.</returns>
+  /// <param name="lineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
+  /// <param name="filePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   public static DescribeBlock Describe(
     string description,
     [CallerLineNumber] int lineNumber = 0,
@@ -56,6 +56,10 @@ public static partial class TestBuilder
   /// A builder object for creating nested test suites using a fluent syntax.
   /// </summary>
   /// <param name="Description">The description for the block of tests.</param>
+  /// <param name="IsOnly">Should be the only test run in the suite</param>
+  /// <param name="IsSkipped">Should be skipped</param>
+  /// <param name="LineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
+  /// <param name="FilePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   public record DescribeBlock(
     string Description,
     bool IsOnly,
@@ -102,7 +106,7 @@ public static partial class TestBuilder
     /// </summary>
     /// <param name="body"></param>
     /// <exception cref="InvalidOperationException">This method will always throw an exception.</exception>
-    [Obsolete(InvalidDescribeAsyncMethodCallMessage)]
+    [Obsolete(InvalidDescribeAsyncMethodCallMessage, error: true)]
     public void As(Func<Task> body)
     {
       throw new InvalidOperationException(InvalidDescribeAsyncMethodCallMessage);
@@ -154,7 +158,7 @@ public static partial class TestBuilder
     /// </summary>
     /// <param name="body"></param>
     /// <exception cref="InvalidOperationException">This method will always throw an exception.</exception>
-    [Obsolete(InvalidDescribeAsyncMethodCallMessage)]
+    [Obsolete(InvalidDescribeAsyncMethodCallMessage, error: true)]
     public void As(Func<T, Task> body)
     {
       throw new InvalidOperationException(InvalidDescribeAsyncMethodCallMessage);
