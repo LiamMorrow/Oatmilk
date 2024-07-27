@@ -27,6 +27,24 @@ internal record TestScope(TestScope? Parent, TestMetadata Metadata)
     return false;
   }
 
+  internal bool AnyChildrenOrThis(Func<TestScope, bool> predicate)
+  {
+    if (predicate(this))
+    {
+      return true;
+    }
+
+    foreach (var child in Children)
+    {
+      if (child.AnyChildrenOrThis(predicate))
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   internal IEnumerable<(TestBlock TestBlock, TestScope TestScope)> EnumerateTests()
   {
     foreach (var test in TestMethods)
@@ -42,6 +60,9 @@ internal record TestScope(TestScope? Parent, TestMetadata Metadata)
       }
     }
   }
+
+  internal bool AnyScopesOrTestsAreOnly =>
+    AnyChildrenOrThis(sc => sc.Metadata.IsOnly || sc.TestMethods.Any(tm => tm.Metadata.IsOnly));
 }
 
 internal record TestSetupMethod(Func<Task> Body);
