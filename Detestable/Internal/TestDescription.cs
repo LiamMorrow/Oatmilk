@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Detestable;
 
-internal record TestScope(string Description, TestScope? Parent, TestMetadata Metadata)
+internal record TestScope(TestScope? Parent, TestMetadata Metadata)
 {
   internal bool HasRunBeforeAlls { get; set; }
   internal bool HasRunAfterAlls { get; set; }
@@ -65,10 +65,10 @@ internal record TestBlock(Func<Task> Body, TestMetadata Metadata)
     var parent = scope.Parent;
     while (parent != null)
     {
-      sb.Insert(0, parent.Description + " ");
+      sb.Insert(0, parent.Metadata.Description + " ");
       parent = parent.Parent;
     }
-    sb.Append(scope.Description).Append(' ').Append(Metadata.Description);
+    sb.Append(scope.Metadata.Description).Append(' ').Append(Metadata.Description);
     return sb.ToString();
   }
 }
