@@ -138,6 +138,23 @@ Describe("My test suite")
     })
 ```
 
+## Features
+
+### Type Safe Test Enumeration
+
+Providing tests with dynamic data has next to zero ceremony. There's no need to annotate with a method with `[Theory]`, or supply data through a different class / member with `[MemberData]`, which has many pitfalls and moves the information of the test far from it. Simply use an `It.Each` or a `Describe.Each` method call and provide the data directly.
+
+```cs
+
+It.Each(
+    [1, 3, 5],
+    val => $"{val} is odd" // Format string are supported as well: "{0} is odd",
+    (value)=>
+    {
+        (value % 2).Should().Be(1);
+    });
+```
+
 ### Examples
 
 See the [Detestable.Tests package](./Detestable.Tests/) for examples of how tests can be written. All tests for Detestable are written in it!

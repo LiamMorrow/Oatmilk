@@ -2,6 +2,9 @@ namespace Detestable.Tests;
 
 public class FluentUnitTestsExample
 {
+  [Fact]
+  public void MyXunitNormalTest() { }
+
   [Detestable]
   public static void TestScope()
   {

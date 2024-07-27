@@ -1,4 +1,6 @@
-﻿namespace Detestable;
+﻿using System.Runtime.CompilerServices;
+
+namespace Detestable;
 
 /// <summary>
 /// Provides methods for building test suites using a declarative syntax.
@@ -8,7 +10,7 @@ public static partial class TestBuilder
 {
   /// <summary>
   /// Obsolete. Descriptions must be synchronous, and async bodies should be moved to <see cref="BeforeAll(Func{Task})"/>, <see cref="BeforeEach(Func{Task})" />.
-  /// Use <see cref="Describe(string,Action)"/> instead.
+  /// Use <see cref="Describe(string,Action,int,string)"/> instead.
   /// </summary>
   /// <param name="description"></param>
   /// <param name="body"></param>
@@ -29,17 +31,31 @@ public static partial class TestBuilder
   /// </summary>
   /// <param name="description">The description of this block of the test suite.</param>
   /// <param name="body">A callback which is immediately invoked to describe tests</param>
-  public static void Describe(string description, Action body)
+  public static void Describe(
+    string description,
+    Action body,
+    [CallerLineNumber] int lineNumber = 0,
+    [CallerFilePath] string filePath = ""
+  )
   {
+    var scopeIndex = CurrentScope?.Children.Count ?? 0;
+    var metadata = new TestMetadata(
+      description,
+      scopeIndex,
+      lineNumber,
+      filePath,
+      IsOnly: false,
+      IsSkipped: false
+    );
     if (RootScope == null)
     {
-      CurrentScope = new TestScope(description, null);
+      CurrentScope = new TestScope(description, null, metadata);
       RootScope = CurrentScope;
     }
     else
     {
       var parent = CurrentScope;
-      CurrentScope = new TestScope(description, parent);
+      CurrentScope = new TestScope(description, parent, metadata);
       parent?.Children.Add(CurrentScope);
     }
 
@@ -53,17 +69,30 @@ public static partial class TestBuilder
   /// </summary>
   /// <param name="description">The description of this block of the test suite.</param>
   /// <returns>A <see cref="DescribeBlock" /> object which allows for the creation of nested test suites.</returns>
-  public static DescribeBlock Describe(string description)
+  public static DescribeBlock Describe(
+    string description,
+    [CallerLineNumber] int lineNumber = 0,
+    [CallerFilePath] string filePath = ""
+  )
   {
+    var scopeIndex = CurrentScope?.Children.Count ?? 0;
+    var metadata = new TestMetadata(
+      description,
+      scopeIndex,
+      lineNumber,
+      filePath,
+      IsOnly: false,
+      IsSkipped: false
+    );
     if (RootScope == null)
     {
-      CurrentScope = new TestScope(description, null);
+      CurrentScope = new TestScope(description, null, metadata);
       RootScope = CurrentScope;
     }
     else
     {
       var parent = CurrentScope;
-      CurrentScope = new TestScope(description, parent);
+      CurrentScope = new TestScope(description, parent, metadata);
       parent?.Children.Add(CurrentScope);
     }
 

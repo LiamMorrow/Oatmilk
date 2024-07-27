@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Detestable.Internal;
 using Xunit.Abstractions;
 using Xunit.Sdk;
@@ -41,13 +42,19 @@ public sealed class DetestableAttribute : FactAttribute { }
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 [XunitTestCaseDiscoverer("Detestable.Xunit.DescribeDiscoverer", "Detestable.Xunit")]
-public sealed class DescribeAttribute(string Description) : FactAttribute
+public sealed class DescribeAttribute(
+  string Description,
+  [CallerFilePath] string FileName = "",
+  [CallerLineNumber] int LineNumber = 0
+) : FactAttribute
 {
   /// <summary>
   /// The description of the test suite.
   /// This is passed to the <see cref="TestBuilder.Describe(string, Action)"/> method.
   /// </summary>
   public string Description { get; } = Description;
+  public string FileName { get; } = FileName;
+  public int LineNumber { get; } = LineNumber;
 }
 
 internal class DescribeDiscoverer : DetestableDiscoverer
@@ -57,7 +64,9 @@ internal class DescribeDiscoverer : DetestableDiscoverer
     var instance = Activator.CreateInstance(tm.TestClass.Class.ToRuntimeType());
     TestBuilder.Describe(
       attribute.GetNamedArgument<string>("Description"),
-      () => tm.Method.ToRuntimeMethod().Invoke(instance, null)
+      () => tm.Method.ToRuntimeMethod().Invoke(instance, null),
+      attribute.GetNamedArgument<int>(nameof(DescribeAttribute.LineNumber)),
+      attribute.GetNamedArgument<string>(nameof(DescribeAttribute.FileName))
     );
     return TestBuilder.ConsumeRootScope();
   }
@@ -122,7 +131,10 @@ internal partial class DetestableXunitTestCase(
   public IMethodInfo Method => TestMethod.Method;
   public int Timeout { get; } = 1000;
   public string DisplayName => TestBlock.GetDescription(TestScope);
-  public string? SkipReason { get; }
+  public string? SkipReason =>
+    TestBlock.Metadata.IsSkipped || TestScope.AnyParentsOrThis(x => x.Metadata.IsSkipped)
+      ? "Used a Skip method"
+      : null;
   public ISourceInformation? SourceInformation
   {
     get
@@ -155,8 +167,10 @@ internal partial class DetestableXunitTestCase(
     if (describeAttribute != null)
     {
       TestBuilder.Describe(
-        describeAttribute.GetNamedArgument<string>("Description"),
-        () => TestMethod.Method.ToRuntimeMethod().Invoke(instance, null)
+        describeAttribute.GetNamedArgument<string>(nameof(DescribeAttribute.Description)),
+        () => TestMethod.Method.ToRuntimeMethod().Invoke(instance, null),
+        describeAttribute.GetNamedArgument<int>(nameof(DescribeAttribute.LineNumber)),
+        describeAttribute.GetNamedArgument<string>(nameof(DescribeAttribute.FileName))
       );
     }
     else

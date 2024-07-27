@@ -22,5 +22,12 @@ public static partial class It
     string description,
     [CallerLineNumber] int lineNumber = 0,
     [CallerFilePath] string filePath = ""
-  ) => new(description, lineNumber, filePath, true);
+  ) =>
+    new(
+      Description: description,
+      IsOnly: true,
+      IsSkipped: false,
+      LineNumber: lineNumber,
+      FilePath: filePath
+    );
 }
