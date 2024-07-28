@@ -2,12 +2,12 @@
 
 > "Jest is great, let's bring it to .NET" - Me
 
-![NuGet Version](https://img.shields.io/nuget/v/Oatmilk?style=flat&label=Oatmilk)
-![NuGet Version](https://img.shields.io/nuget/v/Oatmilk.Xunit?style=flat&label=Oatmilk.Xunit)
+[![NuGet Version](https://img.shields.io/nuget/v/Oatmilk?style=flat&label=Oatmilk)](https://www.nuget.org/packages/Oatmilk/)
+[![NuGet Version](https://img.shields.io/nuget/v/Oatmilk.Xunit?style=flat&label=Oatmilk.Xunit)](https://www.nuget.org/packages/Oatmilk.Xunit/)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/LiamMorrow/Oatmilk/build.yml)
 [![codecov](https://codecov.io/github/LiamMorrow/Oatmilk/graph/badge.svg?token=5UVDXIJVGV)](https://codecov.io/github/LiamMorrow/Oatmilk)
 
-Oatmilk is a testing library for .NET which allows you to write declarative tests, free from annotations and long method names. It is heavily inspired by the [jest](https://github.com/jestjs/jest) testing framework in the JavaScript ecosystem.
+Oatmilk is a testing library for .NET which allows you to write declarative tests, free from annotations and long method names. It is heavily inspired by the [jest](https://github.com/jestjs/jest) and [mocha](https://github.com/mochajs/mocha) testing frameworks in the JavaScript ecosystem.
 
 Oatmilk currently supports running in a test project configured with [xunit](https://github.com/xunit/xunit). You can run your existing xunit `Facts` and `Theories` alongside `Oatmilk` tests.
 
