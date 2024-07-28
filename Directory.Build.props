@@ -19,9 +19,14 @@
         Initial release
       </PackageReleaseNotes>
       <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
       <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
+
+    <ItemGroup>
+      <None Include="..\README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 </Project>
