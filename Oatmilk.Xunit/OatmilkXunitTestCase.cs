@@ -56,7 +56,6 @@ internal partial class OatmilkXunitTestCase(
     CancellationTokenSource cancellationTokenSource
   )
   {
-    cancellationTokenSource.CancelAfter(TestBlock.Metadata.Timeout);
     var oatmilkMessabeBus = new XunitOatmilkMessageBus(messageBus, this);
     if (SkipReason != null)
     {
@@ -103,6 +102,9 @@ internal partial class OatmilkXunitTestCase(
       TestBuilder.Describe(
         describeAttribute.GetNamedArgument<string>(nameof(DescribeAttribute.Description)),
         () => TestMethod.Method.ToRuntimeMethod().Invoke(instance, null),
+        TimeSpan.FromSeconds(
+          describeAttribute.GetNamedArgument<int>(nameof(DescribeAttribute.Timeout))
+        ),
         describeAttribute.GetNamedArgument<int>(nameof(DescribeAttribute.LineNumber)),
         describeAttribute.GetNamedArgument<string>(nameof(DescribeAttribute.FileName))
       );

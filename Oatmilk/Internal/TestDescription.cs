@@ -79,7 +79,7 @@ internal record TestMetadata(
   TimeSpan Timeout
 );
 
-internal record TestBlock(Func<Task> Body, TestMetadata Metadata)
+internal record TestBlock(Func<TestInput, Task> Body, TestMetadata Metadata)
 {
   public string GetDescription(TestScope scope)
   {

@@ -12,6 +12,11 @@ public static partial class TestBuilder
   [ThreadStatic]
   internal static TestScope? RootScope;
 
+  /// <summary>
+  /// The default timeout for tests. Defaults to 5 seconds.
+  /// </summary>
+  public static TimeSpan DefaultTimeout { get; } = TimeSpan.FromSeconds(5);
+
   internal static TestScope ConsumeRootScope()
   {
     if (RootScope == null)

@@ -12,6 +12,10 @@ internal class OatmilkTestBlockRunner(
 
   public async Task<OatmilkRunSummary> RunAsync()
   {
+    var tokenTimeout = new CancellationTokenSource();
+    var testOutputSink = new TestOutputSink();
+    var testInput = new TestInput(testOutputSink, tokenTimeout.Token);
+
     var result = new OatmilkRunSummary(Total: 1);
     if (testBlock.Metadata.IsSkipped || testScope.AnyParentsOrThis(s => s.Metadata.IsSkipped))
     {
@@ -30,7 +34,16 @@ internal class OatmilkTestBlockRunner(
     var finishedTestContext = new FinishedTestContext(true, new TestOutput([""]));
     try
     {
-      await testBlock.Body.Invoke();
+      tokenTimeout.CancelAfter(testBlock.Metadata.Timeout);
+      var testRun = testBlock.Body.Invoke(testInput);
+      await Task.WhenAny(testRun, Task.Delay(testBlock.Metadata.Timeout));
+      if (!testRun.IsCompleted)
+      {
+        throw new TimeoutException(
+          $"Test timed out after {testBlock.Metadata.Timeout.TotalMilliseconds}ms"
+        );
+      }
+      await testRun;
       result = result with { Time = sw.Elapsed };
       messageBus.OnTestPassed(testBlock, testScope, result.Time, "");
     }

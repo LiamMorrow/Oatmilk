@@ -23,7 +23,7 @@ namespace Oatmilk.Xunit;
 ///  </example>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 [XunitTestCaseDiscoverer("Oatmilk.Xunit.OatmilkDiscoverer", "Oatmilk.Xunit")]
-public sealed class OatmilkAttribute : FactAttribute { }
+public sealed class OatmilkAttribute : FactAttribute;
 
 internal class OatmilkDiscoverer : IXunitTestCaseDiscoverer
 {
