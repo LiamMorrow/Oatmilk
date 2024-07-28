@@ -2,8 +2,8 @@
 
 > "Jest is great, let's bring it to .NET" - Me
 
-![NuGet Version](https://img.shields.io/nuget/v/Oatmilk?style=flat&label=Oatmilk)
-![NuGet Version](https://img.shields.io/nuget/v/Oatmilk.Xunit?style=flat&label=Oatmilk.Xunit)
+[![NuGet Version](https://img.shields.io/nuget/v/Oatmilk?style=flat&label=Oatmilk)](https://www.nuget.org/packages/Oatmilk/)
+[![NuGet Version](https://img.shields.io/nuget/v/Oatmilk.Xunit?style=flat&label=Oatmilk.Xunit)](https://www.nuget.org/packages/Oatmilk.Xunit/)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/LiamMorrow/Oatmilk/build.yml)
 [![codecov](https://codecov.io/github/LiamMorrow/Oatmilk/graph/badge.svg?token=5UVDXIJVGV)](https://codecov.io/github/LiamMorrow/Oatmilk)
 
