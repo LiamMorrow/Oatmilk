@@ -204,5 +204,3 @@ Describe("My test suite")
 ### Examples
 
 See the [Oatmilk.Tests package](./Oatmilk.Tests/) for examples of how tests can be written. All tests for Oatmilk are written in it!
-
-## Star History
