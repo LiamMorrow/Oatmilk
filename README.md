@@ -1,4 +1,4 @@
-<h2 align="center">🐶 Terrific .NET Testing</h2>
+<h2 align="center">🥛 Refreshing .NET Testing</h2>
 
 > "Jest is great, let's bring it to .NET" - Me
 
