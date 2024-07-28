@@ -2,36 +2,36 @@
 
 > "Jest is great, let's bring it to .NET" - Me
 
-![NuGet Version](https://img.shields.io/nuget/v/Detestable?style=flat&label=Detestable)
-![NuGet Version](https://img.shields.io/nuget/v/Detestable.Xunit?style=flat&label=Detestable.Xunit)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/LiamMorrow/Detestable/build.yml)
-[![codecov](https://codecov.io/github/LiamMorrow/Detestable/graph/badge.svg?token=5UVDXIJVGV)](https://codecov.io/github/LiamMorrow/Detestable)
+![NuGet Version](https://img.shields.io/nuget/v/Oatmilk?style=flat&label=Oatmilk)
+![NuGet Version](https://img.shields.io/nuget/v/Oatmilk.Xunit?style=flat&label=Oatmilk.Xunit)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/LiamMorrow/Oatmilk/build.yml)
+[![codecov](https://codecov.io/github/LiamMorrow/Oatmilk/graph/badge.svg?token=5UVDXIJVGV)](https://codecov.io/github/LiamMorrow/Oatmilk)
 
-Detestable is a testing library for .NET which allows you to write declarative tests, free from annotations and long method names. It is heavily inspired by the [jest](https://github.com/jestjs/jest) testing framework in the JavaScript ecosystem.
+Oatmilk is a testing library for .NET which allows you to write declarative tests, free from annotations and long method names. It is heavily inspired by the [jest](https://github.com/jestjs/jest) testing framework in the JavaScript ecosystem.
 
-Detestable currently supports running in a test project configured with [xunit](https://github.com/xunit/xunit). You can run your existing xunit `Facts` and `Theories` alongside `Detestable` tests.
+Oatmilk currently supports running in a test project configured with [xunit](https://github.com/xunit/xunit). You can run your existing xunit `Facts` and `Theories` alongside `Oatmilk` tests.
 
 ## Getting Started
 
-First in your test project, install the detestable package.
+First in your test project, install the oatmilk package.
 
 #### Dotnet CLI
 
 ```bash
-dotnet add package Detestable.Xunit
+dotnet add package Oatmilk.Xunit
 ```
 
 #### Package Manager Console
 
 ```bash
-Install-Package Detestable.Xunit
+Install-Package Oatmilk.Xunit
 ```
 
-Then create a test class, and create your first `Detestable Test` by using the `Describe` attribute on a method. Be sure to include a static import of `Detestable.TestBuilder`.
+Then create a test class, and create your first `Oatmilk Test` by using the `Describe` attribute on a method. Be sure to include a static import of `Oatmilk.TestBuilder`.
 
 ```csharp
-using Detestable;
-using static Detestable.TestBuilder;
+using Oatmilk;
+using static Oatmilk.TestBuilder;
 
 public class MyTestClass
 {
@@ -50,7 +50,7 @@ public class MyTestClass
 ### Test setup and teardown
 
 It is often useful to have setup and teardown methods that run around tests.
-Detestable exposes these mechanisms through four methods:
+Oatmilk exposes these mechanisms through four methods:
 
 - `BeforeAll` - Runs ONCE before any test has run in its scope and child scopes
 - `BeforeEach` - Runs before EVERY test in its scope and child scopes
@@ -146,7 +146,7 @@ Describe.Skip("every test in this scope will be skipped", () =>
 
 ### Isolate Tests With Only
 
-Focusing on a single test in a spec? Simply use `It.Only` or `Describe.Only` and Detestable will skip every other test in that spec.
+Focusing on a single test in a spec? Simply use `It.Only` or `Describe.Only` and Oatmilk will skip every other test in that spec.
 
 ```cs
 
@@ -168,7 +168,7 @@ It("will not run because the describe block above uses .Only", () => Assert.True
 
 ### Fluent Syntax
 
-Many people use the [csharpier](https://github.com/belav/csharpier) formatter to format their code. Unfortunately, the way that it chops arguments produces somewhat less than nice to read Detestable test code, as it will put the description of the test on a new line:
+Many people use the [csharpier](https://github.com/belav/csharpier) formatter to format their code. Unfortunately, the way that it chops arguments produces somewhat less than nice to read Oatmilk test code, as it will put the description of the test on a new line:
 
 ```cs
 It(
@@ -181,7 +181,7 @@ It(
 
 ```
 
-For this reason, `Detestable` exposes a fluent API where the body of the test is supplied in a fluent manner, rather than as a second argument:
+For this reason, `Oatmilk` exposes a fluent API where the body of the test is supplied in a fluent manner, rather than as a second argument:
 
 ```cs
 It("is a test")
@@ -203,4 +203,6 @@ Describe("My test suite")
 
 ### Examples
 
-See the [Detestable.Tests package](./Detestable.Tests/) for examples of how tests can be written. All tests for Detestable are written in it!
+See the [Oatmilk.Tests package](./Oatmilk.Tests/) for examples of how tests can be written. All tests for Oatmilk are written in it!
+
+## Star History

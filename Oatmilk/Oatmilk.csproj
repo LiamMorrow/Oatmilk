@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <PackageId>Oatmilk</PackageId>
+    <OutputType>Library</OutputType>
+    <IsPackable>true</IsPackable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(AssemblyName).Tests" />
+    <InternalsVisibleTo Include="$(AssemblyName).Xunit" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Using Include="Oatmilk.Internal.Util"  Static="True"  />
+  </ItemGroup>
+
+</Project>

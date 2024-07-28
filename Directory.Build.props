@@ -5,7 +5,7 @@
       <Nullable>enable</Nullable>
       <Authors>Liam Morrow</Authors>
       <Title>
-        Detestable
+        Oatmilk
       </Title>
       <Description>
         An Xunit extension for c# that allows for more readable tests, heavily inspired by Jest
@@ -14,7 +14,7 @@
       <IncludeSymbols>true</IncludeSymbols>
       <SymbolPackageFormat>snupkg</SymbolPackageFormat>
       <IncludeSource>true</IncludeSource>
-      <RepositoryUrl>https://github.com/LiamMorrow/Detestable</RepositoryUrl>
+      <RepositoryUrl>https://github.com/LiamMorrow/Oatmilk</RepositoryUrl>
       <PackageReleaseNotes>
         Initial release
       </PackageReleaseNotes>
