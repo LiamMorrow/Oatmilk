@@ -69,6 +69,8 @@ public class MyTestClass
     [Describe("My Test Suite")]
     public void Spec()
     {
+        Guid aGuidThatIsUniqueForEachTest;
+
         BeforeAll(()=>
         {
             // This will run once if any of the tests are run
@@ -77,6 +79,8 @@ public class MyTestClass
         BeforeEach(()=>
         {
             // This will run every single time a test is run
+            // You can put initialization code here
+            aGuidThatIsUniqueForEachTest = Guid.NewGuid();
         })
 
         It("Is a test in the top scope", () =>
@@ -108,13 +112,67 @@ public class MyTestClass
 
 ```
 
-## Fluent Syntax
+## Features
+
+### Type Safe Test Enumeration
+
+Providing tests with dynamic data has next to zero ceremony. There's no need to annotate with a method with `[Theory]`, or supply data through a different class / member with `[MemberData]`, which has many pitfalls and moves the information of the test far from it. Simply use an `It.Each` or a `Describe.Each` method call and provide the data directly.
+
+```cs
+
+It.Each(
+    [1, 3, 5],
+    val => $"Asserts that {val} is odd" // Format string are supported as well: "{0} is odd",
+    (value)=>
+    {
+        (value % 2).Should().Be(1);
+    });
+```
+
+### Easily Skip Tests
+
+Got a test you'd like to skip for the time being? Simply add a `.Skip` to the test or describe block and it will be skipped.
+
+```cs
+
+It.Skip("should be skipped", () => Assert.True(false));
+
+Describe.Skip("every test in this scope will be skipped", () =>
+{
+    It("will be skipped", () => Assert.True(false));
+})
+
+```
+
+### Isolate Tests With Only
+
+Focusing on a single test in a spec? Simply use `It.Only` or `Describe.Only` and Detestable will skip every other test in that spec.
+
+```cs
+
+It.Only("will run", () => Assert.True(true));
+
+It("will not run since another test uses It.Only", () => Assert.True(false));
+
+```
+
+```cs
+Describe.Only("A situation where all other tests will be skipped", () =>
+{
+    It("will run", () => Assert.True(true));
+})
+
+It("will not run because the describe block above uses .Only", () => Assert.True(false));
+
+```
+
+### Fluent Syntax
 
 Many people use the [csharpier](https://github.com/belav/csharpier) formatter to format their code. Unfortunately, the way that it chops arguments produces somewhat less than nice to read Detestable test code, as it will put the description of the test on a new line:
 
 ```cs
 It(
-    "I am a test",
+    "is a test",
     () =>
     {
         // My test code
@@ -126,7 +184,7 @@ It(
 For this reason, `Detestable` exposes a fluent API where the body of the test is supplied in a fluent manner, rather than as a second argument:
 
 ```cs
-It("I am a test")
+It("is a test")
     .When(() =>
     {
         // My test code
@@ -141,23 +199,6 @@ Describe("My test suite")
     {
         // My describe block
     })
-```
-
-## Features
-
-### Type Safe Test Enumeration
-
-Providing tests with dynamic data has next to zero ceremony. There's no need to annotate with a method with `[Theory]`, or supply data through a different class / member with `[MemberData]`, which has many pitfalls and moves the information of the test far from it. Simply use an `It.Each` or a `Describe.Each` method call and provide the data directly.
-
-```cs
-
-It.Each(
-    [1, 3, 5],
-    val => $"{val} is odd" // Format string are supported as well: "{0} is odd",
-    (value)=>
-    {
-        (value % 2).Should().Be(1);
-    });
 ```
 
 ### Examples
