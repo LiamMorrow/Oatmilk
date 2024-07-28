@@ -19,7 +19,7 @@ internal class OatmilkTestBlockRunner(
     var result = new OatmilkRunSummary(Total: 1);
     if (testBlock.Metadata.IsSkipped || testScope.AnyParentsOrThis(s => s.Metadata.IsSkipped))
     {
-      messageBus.OnTestSkipped(testBlock, testScope, "");
+      messageBus.OnTestSkipped(testBlock, testScope, "Test or enclosing scope is skipped");
       return result with { Skipped = 1 };
     }
 
@@ -31,7 +31,7 @@ internal class OatmilkTestBlockRunner(
     messageBus.OnBeforeTestSetupFinished(testBlock, testScope);
 
     messageBus.OnTestStarting(testBlock, testScope);
-    var finishedTestContext = new FinishedTestContext(true, new TestOutput([""]));
+    var finishedTestContext = new FinishedTestContext(true, testOutputSink.GetOutput());
     try
     {
       tokenTimeout.CancelAfter(testBlock.Metadata.Timeout);
@@ -45,16 +45,22 @@ internal class OatmilkTestBlockRunner(
       }
       await testRun;
       result = result with { Time = sw.Elapsed };
-      messageBus.OnTestPassed(testBlock, testScope, result.Time, "");
+      messageBus.OnTestPassed(testBlock, testScope, result.Time, testOutputSink.GetOutput().Output);
     }
     catch (Exception ex)
     {
       result = result with { Time = sw.Elapsed, Failed = 1 };
-      messageBus.OnTestFailed(testBlock, testScope, ex, result.Time, "");
+      messageBus.OnTestFailed(
+        testBlock,
+        testScope,
+        ex,
+        result.Time,
+        testOutputSink.GetOutput().Output
+      );
       finishedTestContext = finishedTestContext with { Passed = false };
     }
 
-    messageBus.OnTestFinished(testBlock, testScope, result.Time, "");
+    messageBus.OnTestFinished(testBlock, testScope, result.Time, testOutputSink.GetOutput().Output);
 
     messageBus.OnAfterTestSetupStarting(testBlock, testScope);
     await RunAfterEachesIncludingParentsAsync(finishedTestContext, testScope);
