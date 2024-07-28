@@ -50,10 +50,18 @@ public sealed class DescribeAttribute(
 {
   /// <summary>
   /// The description of the test suite.
-  /// This is passed to the <see cref="TestBuilder.Describe(string, Action)"/> method.
+  /// This is passed to the <see cref="TestBuilder.Describe(string, Action, int,string)"/> method.
   /// </summary>
   public string Description { get; } = Description;
+
+  /// <summary>
+  /// The file path of the file containing the test suite.
+  /// </summary>
   public string FileName { get; } = FileName;
+
+  /// <summary>
+  /// The line number of the test suite.
+  /// </summary>
   public int LineNumber { get; } = LineNumber;
 }
 
