@@ -1,11 +1,25 @@
-<h2 align="center">🥛 Refreshing .NET Testing</h2>
-
-> "Jest is great, let's bring it to .NET" - Me
+<p align="center">
 
 [![NuGet Version](https://img.shields.io/nuget/v/Oatmilk?style=flat&label=Oatmilk)](https://www.nuget.org/packages/Oatmilk/)
 [![NuGet Version](https://img.shields.io/nuget/v/Oatmilk.Xunit?style=flat&label=Oatmilk.Xunit)](https://www.nuget.org/packages/Oatmilk.Xunit/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+</p>
+<p align="center">
+
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/LiamMorrow/Oatmilk/build.yml)
 [![codecov](https://codecov.io/github/LiamMorrow/Oatmilk/graph/badge.svg?token=5UVDXIJVGV)](https://codecov.io/github/LiamMorrow/Oatmilk)
+
+</p>
+
+<!-- A spacer -->
+<p>&nbsp;</p>
+
+<p align="center"><img src="./Assets/Oatie.png" width=256/></p>
+
+<h2 align="center">🥛 Refreshing .NET Testing</h2>
+
+> "Jest is great, let's bring it to .NET" - Me
 
 Oatmilk is a testing library for .NET which allows you to write declarative tests, free from annotations and long method names. It is heavily inspired by the [jest](https://github.com/jestjs/jest) and [mocha](https://github.com/mochajs/mocha) testing frameworks in the JavaScript ecosystem.
 
