@@ -29,7 +29,7 @@ Note that Oatmilk does not intend to be a full test framework, as such, things l
 
 ## Getting Started
 
-First in your test project, install the appropriate Oatmilk package.  Currently only Xunit is supported, however Nunit and MSTest are on the roadmap.
+First in your test project, install the appropriate Oatmilk package. Currently only Xunit is supported, however Nunit and MSTest are on the roadmap.
 
 #### Dotnet CLI
 
@@ -61,6 +61,12 @@ public class MyTestClass
     }
 }
 
+```
+
+Your tests should now show up in your IDE, and can be run with:
+
+```bash
+dotnet test
 ```
 
 ### Test setup and teardown
