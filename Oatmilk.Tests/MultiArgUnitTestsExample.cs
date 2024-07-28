@@ -22,16 +22,21 @@ public class MultiArgUnitTestsExample
 
         It(
           "Should pass",
-          () =>
+          async () =>
           {
+            await Task.Delay(TimeSpan.FromSeconds(5));
             Assert.True(true);
-          }
+          },
+          timeout: TimeSpan.FromSeconds(10)
         );
         It.Each<object>(
           [1, 2, 3, 15, "d", "hello", "world"],
           "Should pass for {0:x}",
-          (i) => {
-            //
+          (i, output) =>
+          {
+            // This will output the value of i to the test output
+            // The output is printed to the console when the test fails
+            output.OutputSink.WriteLine($"Value: {i}");
           }
         );
 

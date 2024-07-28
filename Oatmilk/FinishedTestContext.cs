@@ -17,7 +17,7 @@ public record TestOutput(string[] Messages)
   /// <summary>
   /// The output of the test, concatenated with newlines.
   /// </summary>
-  public string Output => string.Join("\n", Messages);
+  public string Output { get; } = string.Join("\n", Messages);
 
   /// <summary>
   /// Returns the output of the test.

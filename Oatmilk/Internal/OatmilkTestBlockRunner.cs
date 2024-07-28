@@ -12,36 +12,55 @@ internal class OatmilkTestBlockRunner(
 
   public async Task<OatmilkRunSummary> RunAsync()
   {
+    var tokenTimeout = new CancellationTokenSource();
+    var testOutputSink = new TestOutputSink();
+    var testInput = new TestInput(testOutputSink, tokenTimeout.Token);
+
     var result = new OatmilkRunSummary(Total: 1);
     if (testBlock.Metadata.IsSkipped || testScope.AnyParentsOrThis(s => s.Metadata.IsSkipped))
     {
-      messageBus.OnTestSkipped(testBlock, testScope, "");
+      messageBus.OnTestSkipped(testBlock, testScope, "Test or enclosing scope is skipped");
       return result with { Skipped = 1 };
     }
 
     var sw = Stopwatch.StartNew();
 
     messageBus.OnBeforeTestSetupStarting(testBlock, testScope);
-    await RunBeforeAllsIncludingParentsAsync(testScope);
-    await RunBeforeEachesIncludingParentsAsync(testScope);
+    await RunBeforeAllsIncludingParentsAsync(testScope, testInput);
+    await RunBeforeEachesIncludingParentsAsync(testScope, testInput);
     messageBus.OnBeforeTestSetupFinished(testBlock, testScope);
 
     messageBus.OnTestStarting(testBlock, testScope);
-    var finishedTestContext = new FinishedTestContext(true, new TestOutput([""]));
+    var finishedTestContext = new FinishedTestContext(true, testOutputSink.GetOutput());
     try
     {
-      await testBlock.Body.Invoke();
+      tokenTimeout.CancelAfter(testBlock.Metadata.Timeout);
+      var testRun = testBlock.Body.Invoke(testInput);
+      await Task.WhenAny(testRun, Task.Delay(testBlock.Metadata.Timeout));
+      if (!testRun.IsCompleted)
+      {
+        throw new TimeoutException(
+          $"Test timed out after {testBlock.Metadata.Timeout.TotalMilliseconds}ms"
+        );
+      }
+      await testRun;
       result = result with { Time = sw.Elapsed };
-      messageBus.OnTestPassed(testBlock, testScope, result.Time, "");
+      messageBus.OnTestPassed(testBlock, testScope, result.Time, testOutputSink.GetOutput().Output);
     }
     catch (Exception ex)
     {
       result = result with { Time = sw.Elapsed, Failed = 1 };
-      messageBus.OnTestFailed(testBlock, testScope, ex, result.Time, "");
+      messageBus.OnTestFailed(
+        testBlock,
+        testScope,
+        ex,
+        result.Time,
+        testOutputSink.GetOutput().Output
+      );
       finishedTestContext = finishedTestContext with { Passed = false };
     }
 
-    messageBus.OnTestFinished(testBlock, testScope, result.Time, "");
+    messageBus.OnTestFinished(testBlock, testScope, result.Time, testOutputSink.GetOutput().Output);
 
     messageBus.OnAfterTestSetupStarting(testBlock, testScope);
     await RunAfterEachesIncludingParentsAsync(finishedTestContext, testScope);
@@ -51,11 +70,11 @@ internal class OatmilkTestBlockRunner(
     return result;
   }
 
-  private async Task RunBeforeAllsIncludingParentsAsync(TestScope testScope)
+  private async Task RunBeforeAllsIncludingParentsAsync(TestScope testScope, TestInput testInput)
   {
     if (testScope.Parent != null)
     {
-      await RunBeforeAllsIncludingParentsAsync(testScope.Parent);
+      await RunBeforeAllsIncludingParentsAsync(testScope.Parent, testInput);
     }
     if (testScope.HasRunBeforeAlls)
     {
@@ -63,7 +82,7 @@ internal class OatmilkTestBlockRunner(
     }
     foreach (var beforeAll in testScope.TestBeforeAlls)
     {
-      await beforeAll.Body.Invoke();
+      await beforeAll.Body(testInput);
     }
     testScope.HasRunBeforeAlls = true;
   }
@@ -100,15 +119,15 @@ internal class OatmilkTestBlockRunner(
     }
   }
 
-  private async Task RunBeforeEachesIncludingParentsAsync(TestScope testScope)
+  private async Task RunBeforeEachesIncludingParentsAsync(TestScope testScope, TestInput testInput)
   {
     if (testScope.Parent != null)
     {
-      await RunBeforeEachesIncludingParentsAsync(testScope.Parent);
+      await RunBeforeEachesIncludingParentsAsync(testScope.Parent, testInput);
     }
     foreach (var beforeEach in testScope.TestBeforeEachs)
     {
-      await beforeEach.Body.Invoke();
+      await beforeEach.Body(testInput);
     }
   }
 }

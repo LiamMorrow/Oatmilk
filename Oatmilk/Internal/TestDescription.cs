@@ -9,7 +9,7 @@ internal record TestScope(TestScope? Parent, TestMetadata Metadata)
   internal List<TestSetupMethod> TestBeforeAlls { get; } = [];
   internal List<TestSetupMethod> TestBeforeEachs { get; } = [];
   internal List<TestAfterEachMethod> TestAfterEachs { get; } = [];
-  internal List<TestSetupMethod> TestAfterAlls { get; } = [];
+  internal List<TestTeardownMethod> TestAfterAlls { get; } = [];
   internal List<TestBlock> TestMethods { get; } = [];
   internal List<TestScope> Children { get; } = [];
 
@@ -65,7 +65,9 @@ internal record TestScope(TestScope? Parent, TestMetadata Metadata)
     AnyChildrenOrThis(sc => sc.Metadata.IsOnly || sc.TestMethods.Any(tm => tm.Metadata.IsOnly));
 }
 
-internal record TestSetupMethod(Func<Task> Body);
+internal record TestSetupMethod(Func<TestInput, Task> Body);
+
+internal record TestTeardownMethod(Func<Task> Body);
 
 internal record TestAfterEachMethod(Func<FinishedTestContext, Task> Body);
 
@@ -75,10 +77,11 @@ internal record TestMetadata(
   int LineNumber,
   string FilePath,
   bool IsOnly,
-  bool IsSkipped
+  bool IsSkipped,
+  TimeSpan Timeout
 );
 
-internal record TestBlock(Func<Task> Body, TestMetadata Metadata)
+internal record TestBlock(Func<TestInput, Task> Body, TestMetadata Metadata)
 {
   public string GetDescription(TestScope scope)
   {
