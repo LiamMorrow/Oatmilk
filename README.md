@@ -11,6 +11,8 @@ Oatmilk is a testing library for .NET which allows you to write declarative test
 
 Oatmilk currently supports running in a test project configured with [xunit](https://github.com/xunit/xunit). You can run your existing xunit `Facts` and `Theories` alongside `Oatmilk` tests.
 
+Note that Oatmilk does not intend to be a full test framework, as such things like mocking, and asserting are out of scope.  There are many other great tools for the job.
+
 ## Getting Started
 
 First in your test project, install the oatmilk package.
