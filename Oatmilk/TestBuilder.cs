@@ -1,4 +1,6 @@
-﻿namespace Oatmilk;
+﻿using Oatmilk.Internal;
+
+namespace Oatmilk;
 
 /// <summary>
 /// Provides methods for building test suites using a declarative syntax.
@@ -14,8 +16,9 @@ public static partial class TestBuilder
 
   /// <summary>
   /// The default timeout for tests. Defaults to 5 seconds.
+  /// Can be configured by setting the OATMILK_DEFAULT_TIMEOUT_SECONDS environment variable.
   /// </summary>
-  public static TimeSpan DefaultTimeout { get; } = TimeSpan.FromSeconds(5);
+  public static TimeSpan DefaultTimeout { get; } = OatmilkConfiguration.DefaultTimeout;
 
   internal static TestScope ConsumeRootScope()
   {
