@@ -5,6 +5,7 @@
 ![NuGet Version](https://img.shields.io/nuget/v/Detestable?style=flat&label=Detestable)
 ![NuGet Version](https://img.shields.io/nuget/v/Detestable.Xunit?style=flat&label=Detestable.Xunit)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/LiamMorrow/Detestable/build.yml)
+[![codecov](https://codecov.io/github/LiamMorrow/Detestable/graph/badge.svg?token=5UVDXIJVGV)](https://codecov.io/github/LiamMorrow/Detestable)
 
 Detestable is a testing library for .NET which allows you to write declarative tests, free from annotations and long method names. It is heavily inspired by the [jest](https://github.com/jestjs/jest) testing framework in the JavaScript ecosystem.
 
