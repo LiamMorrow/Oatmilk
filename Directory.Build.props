@@ -1,25 +1,28 @@
 <Project>
     <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>0.0.6</Version>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <Authors>Liam Morrow</Authors>
-    <Title>
-      Detestable
-    </Title>
-    <Description>
-      An Xunit extension for c# that allows for more readable tests, heavily inspired by Jest
-    </Description>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <IncludeSource>true</IncludeSource>
-    <RepositoryUrl>https://github.com/LiamMorrow/Detestable</RepositoryUrl>
-    <PackageReleaseNotes>
-      Initial release
-    </PackageReleaseNotes>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+      <TargetFramework>net8.0</TargetFramework>
+      <Version>0.0.6</Version>
+      <ImplicitUsings>enable</ImplicitUsings>
+      <Nullable>enable</Nullable>
+      <Authors>Liam Morrow</Authors>
+      <Title>
+        Detestable
+      </Title>
+      <Description>
+        An Xunit extension for c# that allows for more readable tests, heavily inspired by Jest
+      </Description>
+      <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+      <IncludeSymbols>true</IncludeSymbols>
+      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+      <IncludeSource>true</IncludeSource>
+      <RepositoryUrl>https://github.com/LiamMorrow/Detestable</RepositoryUrl>
+      <PackageReleaseNotes>
+        Initial release
+      </PackageReleaseNotes>
+      <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 </Project>

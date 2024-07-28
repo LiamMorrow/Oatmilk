@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Detestable;
 
-internal record TestScope(string Description, TestScope? Parent)
+internal record TestScope(TestScope? Parent, TestMetadata Metadata)
 {
   internal bool HasRunBeforeAlls { get; set; }
   internal bool HasRunAfterAlls { get; set; }
@@ -12,6 +12,38 @@ internal record TestScope(string Description, TestScope? Parent)
   internal List<TestSetupMethod> TestAfterAlls { get; } = [];
   internal List<TestBlock> TestMethods { get; } = [];
   internal List<TestScope> Children { get; } = [];
+
+  internal bool AnyParentsOrThis(Func<TestScope, bool> predicate)
+  {
+    var current = this;
+    while (current != null)
+    {
+      if (predicate(current))
+      {
+        return true;
+      }
+      current = current.Parent;
+    }
+    return false;
+  }
+
+  internal bool AnyChildrenOrThis(Func<TestScope, bool> predicate)
+  {
+    if (predicate(this))
+    {
+      return true;
+    }
+
+    foreach (var child in Children)
+    {
+      if (child.AnyChildrenOrThis(predicate))
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
 
   internal IEnumerable<(TestBlock TestBlock, TestScope TestScope)> EnumerateTests()
   {
@@ -28,13 +60,23 @@ internal record TestScope(string Description, TestScope? Parent)
       }
     }
   }
+
+  internal bool AnyScopesOrTestsAreOnly =>
+    AnyChildrenOrThis(sc => sc.Metadata.IsOnly || sc.TestMethods.Any(tm => tm.Metadata.IsOnly));
 }
 
 internal record TestSetupMethod(Func<Task> Body);
 
 internal record TestAfterEachMethod(Func<FinishedTestContext, Task> Body);
 
-internal record TestMetadata(string Description, int ScopeIndex, int LineNumber, string FilePath);
+internal record TestMetadata(
+  string Description,
+  int ScopeIndex,
+  int LineNumber,
+  string FilePath,
+  bool IsOnly,
+  bool IsSkipped
+);
 
 internal record TestBlock(Func<Task> Body, TestMetadata Metadata)
 {
@@ -44,10 +86,10 @@ internal record TestBlock(Func<Task> Body, TestMetadata Metadata)
     var parent = scope.Parent;
     while (parent != null)
     {
-      sb.Insert(0, parent.Description + " ");
+      sb.Insert(0, parent.Metadata.Description + " ");
       parent = parent.Parent;
     }
-    sb.Append(scope.Description).Append(' ').Append(Metadata.Description);
+    sb.Append(scope.Metadata.Description).Append(' ').Append(Metadata.Description);
     return sb.ToString();
   }
 }

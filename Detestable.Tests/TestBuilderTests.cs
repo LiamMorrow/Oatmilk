@@ -21,6 +21,14 @@ public class TestBuilderTests
             Assert.Throws<InvalidOperationException>(TestBuilder.ConsumeRootScope);
           }
         );
+        It.Each(
+          [1, 3, 5],
+          "{0} is odd", // Can either use a format string, or a callback like val => $"{val} is odd"
+          (value) =>
+          {
+            (value % 2).Should().Be(1);
+          }
+        );
       }
     );
 

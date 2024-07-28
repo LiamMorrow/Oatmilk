@@ -10,4 +10,10 @@
     <InternalsVisibleTo Include="$(AssemblyName).Tests" />
     <InternalsVisibleTo Include="$(AssemblyName).Xunit" />
   </ItemGroup>
+
+
+  <ItemGroup>
+    <Using Include="Detestable.Internal.Util"  Static="True"  />
+  </ItemGroup>
+
 </Project>

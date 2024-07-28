@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Detestable.Internal;
 using Xunit.Abstractions;
 using Xunit.Sdk;
@@ -41,23 +42,39 @@ public sealed class DetestableAttribute : FactAttribute { }
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 [XunitTestCaseDiscoverer("Detestable.Xunit.DescribeDiscoverer", "Detestable.Xunit")]
-public sealed class DescribeAttribute(string Description) : FactAttribute
+public sealed class DescribeAttribute(
+  string Description,
+  [CallerFilePath] string FileName = "",
+  [CallerLineNumber] int LineNumber = 0
+) : FactAttribute
 {
   /// <summary>
   /// The description of the test suite.
-  /// This is passed to the <see cref="TestBuilder.Describe(string, Action)"/> method.
+  /// This is passed to the <see cref="TestBuilder.Describe(string, Action, int,string)"/> method.
   /// </summary>
   public string Description { get; } = Description;
+
+  /// <summary>
+  /// The file path of the file containing the test suite.
+  /// </summary>
+  public string FileName { get; } = FileName;
+
+  /// <summary>
+  /// The line number of the test suite.
+  /// </summary>
+  public int LineNumber { get; } = LineNumber;
 }
 
 internal class DescribeDiscoverer : DetestableDiscoverer
 {
-  protected override TestScope GetTestScope(ITestMethod tm, IAttributeInfo attribute)
+  protected override TestScope GetRootScope(ITestMethod tm, IAttributeInfo attribute)
   {
     var instance = Activator.CreateInstance(tm.TestClass.Class.ToRuntimeType());
     TestBuilder.Describe(
       attribute.GetNamedArgument<string>("Description"),
-      () => tm.Method.ToRuntimeMethod().Invoke(instance, null)
+      () => tm.Method.ToRuntimeMethod().Invoke(instance, null),
+      attribute.GetNamedArgument<int>(nameof(DescribeAttribute.LineNumber)),
+      attribute.GetNamedArgument<string>(nameof(DescribeAttribute.FileName))
     );
     return TestBuilder.ConsumeRootScope();
   }
@@ -65,26 +82,38 @@ internal class DescribeDiscoverer : DetestableDiscoverer
 
 internal class DetestableDiscoverer : IXunitTestCaseDiscoverer
 {
-  internal static IEnumerable<IXunitTestCase> TraverseScopesAndYieldTestCases(
+  internal static IEnumerable<DetestableXunitTestCase> TraverseScopesAndYieldTestCases(
     TestScope testScope,
-    ITestMethod callingMethod
+    ITestMethod callingMethod,
+    bool anyOnlyTestsInEntireScope
   )
   {
     foreach (var testMethod in testScope.TestMethods)
     {
-      yield return new DetestableXunitTestCase(testScope, testMethod, callingMethod);
+      yield return new DetestableXunitTestCase(
+        testScope,
+        testMethod,
+        callingMethod,
+        anyOnlyTestsInEntireScope
+      );
     }
 
     foreach (var childScope in testScope.Children)
     {
-      foreach (var testCase in TraverseScopesAndYieldTestCases(childScope, callingMethod))
+      foreach (
+        var testCase in TraverseScopesAndYieldTestCases(
+          childScope,
+          callingMethod,
+          anyOnlyTestsInEntireScope
+        )
+      )
       {
         yield return testCase;
       }
     }
   }
 
-  protected virtual TestScope GetTestScope(ITestMethod tm, IAttributeInfo attribute)
+  protected virtual TestScope GetRootScope(ITestMethod tm, IAttributeInfo attribute)
   {
     var instance = Activator.CreateInstance(tm.TestClass.Class.ToRuntimeType());
     tm.Method.ToRuntimeMethod().Invoke(instance, null);
@@ -97,8 +126,8 @@ internal class DetestableDiscoverer : IXunitTestCaseDiscoverer
     IAttributeInfo factAttribute
   )
   {
-    var testScope = GetTestScope(tm, factAttribute);
-    return TraverseScopesAndYieldTestCases(testScope, tm);
+    var rootScope = GetRootScope(tm, factAttribute);
+    return TraverseScopesAndYieldTestCases(rootScope, tm, rootScope.AnyScopesOrTestsAreOnly);
   }
 }
 
@@ -106,18 +135,26 @@ internal class DetestableDiscoverer : IXunitTestCaseDiscoverer
 internal partial class DetestableXunitTestCase(
   TestScope testScope,
   TestBlock testExecutionMethod,
-  ITestMethod callingMethod
+  ITestMethod callingMethod,
+  bool AnyOnlyTestsInEntireScope
 ) : IXunitTestCase
 {
   [Obsolete("Here for serializable")]
   public DetestableXunitTestCase()
-    : this(null!, null!, null!) { }
+    : this(null!, null!, null!, false) { }
 
   public Exception? InitializationException { get; }
   public IMethodInfo Method => TestMethod.Method;
   public int Timeout { get; } = 1000;
   public string DisplayName => TestBlock.GetDescription(TestScope);
-  public string? SkipReason { get; }
+  public string? SkipReason =>
+    TestBlock.Metadata.IsSkipped || TestScope.AnyParentsOrThis(x => x.Metadata.IsSkipped)
+      ? "Used a Skip method"
+      : AnyOnlyTestsInEntireScope
+      && !TestBlock.Metadata.IsOnly
+      && !TestScope.AnyParentsOrThis(x => x.Metadata.IsOnly)
+        ? "Only tests are present in this scope"
+        : null;
   public ISourceInformation? SourceInformation
   {
     get
@@ -150,8 +187,10 @@ internal partial class DetestableXunitTestCase(
     if (describeAttribute != null)
     {
       TestBuilder.Describe(
-        describeAttribute.GetNamedArgument<string>("Description"),
-        () => TestMethod.Method.ToRuntimeMethod().Invoke(instance, null)
+        describeAttribute.GetNamedArgument<string>(nameof(DescribeAttribute.Description)),
+        () => TestMethod.Method.ToRuntimeMethod().Invoke(instance, null),
+        describeAttribute.GetNamedArgument<int>(nameof(DescribeAttribute.LineNumber)),
+        describeAttribute.GetNamedArgument<string>(nameof(DescribeAttribute.FileName))
       );
     }
     else
@@ -159,13 +198,16 @@ internal partial class DetestableXunitTestCase(
       TestMethod.Method.ToRuntimeMethod().Invoke(instance, null);
     }
 
+    var rootScope = TestBuilder.ConsumeRootScope();
+
+    AnyOnlyTestsInEntireScope = rootScope.AnyScopesOrTestsAreOnly;
+
     var filePath = data.GetValue<string>("TestBlock.FilePath");
     var lineNumber = data.GetValue<int>("TestBlock.LineNumber");
     var ScopeIndex = data.GetValue<int>("TestBlock.ScopeIndex");
     var description = data.GetValue<string>("TestBlock.Description");
 
-    (TestBlock, TestScope) = TestBuilder
-      .ConsumeRootScope()
+    (TestBlock, TestScope) = rootScope
       .EnumerateTests()
       .Single(t =>
         t.TestBlock.Metadata.FilePath == filePath
@@ -183,10 +225,16 @@ internal partial class DetestableXunitTestCase(
     CancellationTokenSource cancellationTokenSource
   )
   {
+    var detestableMessabeBus = new XunitDetestableMessageBus(messageBus, this);
+    if (SkipReason != null)
+    {
+      detestableMessabeBus.OnTestSkipped(TestBlock, TestScope, SkipReason);
+      return new RunSummary { Total = 1, Skipped = 1 };
+    }
     var result = await new DetestableTestBlockRunner(
       TestScope,
       TestBlock,
-      new XunitDetestableMessageBus(messageBus, this)
+      detestableMessabeBus
     ).RunAsync();
 
     return new RunSummary
