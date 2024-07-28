@@ -75,7 +75,8 @@ internal record TestMetadata(
   int LineNumber,
   string FilePath,
   bool IsOnly,
-  bool IsSkipped
+  bool IsSkipped,
+  TimeSpan Timeout
 );
 
 internal record TestBlock(Func<Task> Body, TestMetadata Metadata)
