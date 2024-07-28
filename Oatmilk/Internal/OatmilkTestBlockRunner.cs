@@ -26,8 +26,8 @@ internal class OatmilkTestBlockRunner(
     var sw = Stopwatch.StartNew();
 
     messageBus.OnBeforeTestSetupStarting(testBlock, testScope);
-    await RunBeforeAllsIncludingParentsAsync(testScope);
-    await RunBeforeEachesIncludingParentsAsync(testScope);
+    await RunBeforeAllsIncludingParentsAsync(testScope, testInput);
+    await RunBeforeEachesIncludingParentsAsync(testScope, testInput);
     messageBus.OnBeforeTestSetupFinished(testBlock, testScope);
 
     messageBus.OnTestStarting(testBlock, testScope);
@@ -70,11 +70,11 @@ internal class OatmilkTestBlockRunner(
     return result;
   }
 
-  private async Task RunBeforeAllsIncludingParentsAsync(TestScope testScope)
+  private async Task RunBeforeAllsIncludingParentsAsync(TestScope testScope, TestInput testInput)
   {
     if (testScope.Parent != null)
     {
-      await RunBeforeAllsIncludingParentsAsync(testScope.Parent);
+      await RunBeforeAllsIncludingParentsAsync(testScope.Parent, testInput);
     }
     if (testScope.HasRunBeforeAlls)
     {
@@ -82,7 +82,7 @@ internal class OatmilkTestBlockRunner(
     }
     foreach (var beforeAll in testScope.TestBeforeAlls)
     {
-      await beforeAll.Body.Invoke();
+      await beforeAll.Body(testInput);
     }
     testScope.HasRunBeforeAlls = true;
   }
@@ -119,15 +119,15 @@ internal class OatmilkTestBlockRunner(
     }
   }
 
-  private async Task RunBeforeEachesIncludingParentsAsync(TestScope testScope)
+  private async Task RunBeforeEachesIncludingParentsAsync(TestScope testScope, TestInput testInput)
   {
     if (testScope.Parent != null)
     {
-      await RunBeforeEachesIncludingParentsAsync(testScope.Parent);
+      await RunBeforeEachesIncludingParentsAsync(testScope.Parent, testInput);
     }
     foreach (var beforeEach in testScope.TestBeforeEachs)
     {
-      await beforeEach.Body.Invoke();
+      await beforeEach.Body(testInput);
     }
   }
 }
