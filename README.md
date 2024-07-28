@@ -1,6 +1,6 @@
 <h2 align="center">🐶 .NET tests which are nice to read</h2>
 
-> "Jest is great, let's bring it to .NET" - Liam Morrow
+> "Jest is great, let's bring it to .NET" - Me
 
 ![NuGet Version](https://img.shields.io/nuget/v/Detestable?style=flat&label=Detestable)
 ![NuGet Version](https://img.shields.io/nuget/v/Detestable.Xunit?style=flat&label=Detestable.Xunit)
