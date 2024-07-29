@@ -142,7 +142,7 @@ public static partial class Describe
   /// <param name="lineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="filePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <exception cref="InvalidOperationException">This method will always throw an exception.</exception>
-  [Obsolete(InvalidDescribeAsyncMethodCallMessage, error: true)]
+  [Obsolete(InvalidDescribeAsyncMethodCallMessage)]
   public static void Skip(
     string description,
     Func<Task> body,
@@ -163,7 +163,7 @@ public static partial class Describe
   /// <param name="lineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="filePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <exception cref="InvalidOperationException">This method will always throw an exception.</exception>
-  [Obsolete(InvalidDescribeAsyncMethodCallMessage, error: true)]
+  [Obsolete(InvalidDescribeAsyncMethodCallMessage)]
   public static void Skip<T>(
     IEnumerable<T> values,
     string descriptionFormatString,
@@ -185,7 +185,7 @@ public static partial class Describe
   /// <param name="lineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="filePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <exception cref="InvalidOperationException">This method will always throw an exception.</exception>
-  [Obsolete(InvalidDescribeAsyncMethodCallMessage, error: true)]
+  [Obsolete(InvalidDescribeAsyncMethodCallMessage)]
   public static void Skip<T>(
     IEnumerable<T> values,
     Func<T, string> description,

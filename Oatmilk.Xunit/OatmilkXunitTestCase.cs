@@ -62,7 +62,7 @@ internal partial class OatmilkXunitTestCase(
   }
 
   public string UniqueID =>
-    $"{TestBlock.Metadata.FilePath}:{TestBlock.Metadata.LineNumber}:{TestBlock.Metadata.ScopeIndex}";
+    $"{TestBlock.Metadata.FilePath}:{TestBlock.Metadata.LineNumber}:{TestScope.ScopeIndexPath}:{TestBlock.Metadata.ScopeIndex}";
 
   public async Task<RunSummary> RunAsync(
     IMessageSink diagnosticMessageSink,

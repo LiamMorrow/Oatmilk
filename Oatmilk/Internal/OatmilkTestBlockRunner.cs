@@ -17,11 +17,6 @@ internal class OatmilkTestBlockRunner(
     var testInput = new TestInput(testOutputSink, tokenTimeout.Token);
 
     var result = new OatmilkRunSummary(Total: 1);
-    if (testBlock.Metadata.IsSkipped || testScope.AnyParentsOrThis(s => s.Metadata.IsSkipped))
-    {
-      messageBus.OnTestSkipped(testBlock, testScope, "Test or enclosing scope is skipped");
-      return result with { Skipped = 1 };
-    }
 
     var sw = Stopwatch.StartNew();
 
@@ -44,7 +39,7 @@ internal class OatmilkTestBlockRunner(
         );
       }
       await testRun;
-      result = result with { Time = sw.Elapsed };
+      result = result with { Time = sw.Elapsed, Passed = 1 };
       messageBus.OnTestPassed(testBlock, testScope, result.Time, testOutputSink.GetOutput().Output);
     }
     catch (Exception ex)

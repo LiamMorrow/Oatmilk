@@ -13,6 +13,11 @@ internal record TestScope(TestScope? Parent, TestMetadata Metadata)
   internal List<TestBlock> TestMethods { get; } = [];
   internal List<TestScope> Children { get; } = [];
 
+  internal string ScopeIndexPath =>
+    Parent == null
+      ? Metadata.ScopeIndex.ToString()
+      : $"{Parent.ScopeIndexPath}.{Metadata.ScopeIndex}";
+
   internal bool AnyParentsOrThis(Func<TestScope, bool> predicate)
   {
     var current = this;

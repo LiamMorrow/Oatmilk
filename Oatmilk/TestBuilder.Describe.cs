@@ -18,7 +18,7 @@ public static partial class TestBuilder
   /// <param name="body"></param>
   /// <param name="timeout"></param>
   /// <exception cref="InvalidOperationException">This method will always throw an exception.</exception>
-  [Obsolete(InvalidDescribeAsyncMethodCallMessage, error: true)]
+  [Obsolete(InvalidDescribeAsyncMethodCallMessage)]
   public static void Describe(string description, Func<Task> body, TimeSpan? timeout = null) =>
     throw new InvalidOperationException(InvalidDescribeAsyncMethodCallMessage);
 
@@ -121,7 +121,7 @@ public static partial class TestBuilder
     /// </summary>
     /// <param name="body"></param>
     /// <exception cref="InvalidOperationException">This method will always throw an exception.</exception>
-    [Obsolete(InvalidDescribeAsyncMethodCallMessage, error: true)]
+    [Obsolete(InvalidDescribeAsyncMethodCallMessage)]
     public void As(Func<Task> body)
     {
       throw new InvalidOperationException(InvalidDescribeAsyncMethodCallMessage);
@@ -176,7 +176,7 @@ public static partial class TestBuilder
     /// </summary>
     /// <param name="body"></param>
     /// <exception cref="InvalidOperationException">This method will always throw an exception.</exception>
-    [Obsolete(InvalidDescribeAsyncMethodCallMessage, error: true)]
+    [Obsolete(InvalidDescribeAsyncMethodCallMessage)]
     public void As(Func<T, Task> body)
     {
       throw new InvalidOperationException(InvalidDescribeAsyncMethodCallMessage);
