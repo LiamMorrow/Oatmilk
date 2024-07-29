@@ -1,9 +1,12 @@
+using FluentAssertions;
+using Oatmilk.Internal;
+
 namespace Oatmilk.Tests.TestVariants;
 
 public class DescribeTestVariants
 {
   [Describe("A test suite of many of the Describe variants")]
-  public void EachSpec()
+  public void MainDescribeVariants()
   {
     It("should pass", () => Assert.True(true));
 
@@ -111,7 +114,7 @@ public class DescribeTestVariants
   }
 
   [Describe("A test suite containing Describe.Only calls")]
-  public void OnlySpec()
+  public void DescribeOnlyVariants()
   {
     // Note that any describe with an only will be run, not just the first
     Describe.Only(
@@ -149,14 +152,112 @@ public class DescribeTestVariants
     );
   }
 
-  [Oatmilk]
+  [Describe("OatmilkDiscoverer tests enumeration")]
   public void Spec2()
   {
+    TestScope rootScope = null!;
+    List<(TestScope TestScope, TestBlock TestBlock)> discoveredTests = null!;
+
+    void Setup(Action testMethod)
+    {
+      TestBuilder.Describe("A root node", testMethod);
+      rootScope = TestBuilder.ConsumeRootScope();
+      discoveredTests = OatmilkDiscoverer
+        .TraverseScopesAndYieldTestBlocks(rootScope, false)
+        .ToList();
+    }
+
     Describe(
-      "A test suite with the oatmilk annotation",
+      "For the main test scopes",
       () =>
       {
-        It("should pass", () => Assert.True(true));
+        BeforeAll(() =>
+        {
+          Setup(MainDescribeVariants);
+        });
+
+        It(
+          "should have the correct number of tests",
+          () =>
+          {
+            discoveredTests.Count.Should().Be(22);
+          }
+        );
+
+        It(
+          "should have the correct number of skipped tests",
+          () =>
+          {
+            discoveredTests
+              .Count(x => x.TestBlock.ShouldSkipDueToIsSkippedOnThisOrParent(x.TestScope))
+              .Should()
+              .Be(14);
+
+            // No tests were directly skipped
+            discoveredTests.Select(x => x.TestBlock.Metadata.IsSkipped).Should().NotContain(true);
+          }
+        );
+
+        It(
+          "should pass or skip tests",
+          async (input) =>
+          {
+            var messageBus = new DummyMessageBus();
+            foreach (var test in discoveredTests)
+            {
+              var testRunner = new OatmilkTestBlockRunner(
+                test.TestScope,
+                test.TestBlock,
+                messageBus
+              );
+
+              var result = await testRunner.RunAsync(false);
+              if (test.TestBlock.ShouldSkipDueToIsSkippedOnThisOrParent(test.TestScope))
+              {
+                result.Skipped.Should().Be(1);
+              }
+              else
+              {
+                result.Passed.Should().Be(1);
+              }
+
+              result.Failed.Should().Be(0);
+              result.Total.Should().Be(1);
+            }
+          }
+        );
+      }
+    );
+    Describe(
+      "For the 'Only' test scopes",
+      () =>
+      {
+        BeforeAll(() =>
+        {
+          Setup(DescribeOnlyVariants);
+        });
+
+        It(
+          "should have the correct number of tests",
+          () =>
+          {
+            discoveredTests.Count.Should().Be(8);
+          }
+        );
+
+        It(
+          "should have no directly skipped tests",
+          () =>
+          {
+            discoveredTests
+              .Count(x => x.TestBlock.ShouldSkipDueToIsSkippedOnThisOrParent(x.TestScope))
+              .Should()
+              .Be(0);
+
+            // No tests were directly skipped
+            discoveredTests.Select(x => x.TestBlock.Metadata.IsSkipped).Should().NotContain(true);
+          }
+        );
       }
     );
   }

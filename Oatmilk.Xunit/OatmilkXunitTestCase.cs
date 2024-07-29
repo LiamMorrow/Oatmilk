@@ -26,7 +26,7 @@ internal partial class OatmilkXunitTestCase(
     && !TestBlock.Metadata.IsOnly
     && !TestScope.AnyParentsOrThis(x => x.Metadata.IsOnly);
   public string? SkipReason =>
-    TestBlock.Metadata.IsSkipped || TestScope.AnyParentsOrThis(x => x.Metadata.IsSkipped)
+    TestBlock.ShouldSkipDueToIsSkippedOnThisOrParent(TestScope)
       ? "Used a Skip method"
       : SkippingDueToParentScopeOnly
         ? "Only tests are present in this scope"

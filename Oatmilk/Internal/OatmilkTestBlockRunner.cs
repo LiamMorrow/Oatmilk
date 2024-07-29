@@ -23,7 +23,7 @@ internal class OatmilkTestBlockRunner(
       messageBus.OnTestSkipped(testBlock, testScope, "Parent scope has an only block");
       return result with { Skipped = 1 };
     }
-    if (testBlock.Metadata.IsSkipped || testScope.AnyParentsOrThis(x => x.Metadata.IsSkipped))
+    if (testBlock.ShouldSkipDueToIsSkippedOnThisOrParent(testScope))
     {
       messageBus.OnTestSkipped(testBlock, testScope, "Skipped using a Skip method");
       return result with { Skipped = 1 };

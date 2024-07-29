@@ -88,6 +88,21 @@ internal record TestMetadata(
 
 internal record TestBlock(Func<TestInput, Task> Body, TestMetadata Metadata)
 {
+  public bool ShouldSkipDueToIsSkippedOnThisOrParent(TestScope scope)
+  {
+    if (Metadata.IsSkipped)
+    {
+      return true;
+    }
+
+    if (scope.AnyParentsOrThis(x => x.Metadata.IsSkipped))
+    {
+      return true;
+    }
+
+    return false;
+  }
+
   public string GetDescription(TestScope scope)
   {
     var sb = new StringBuilder();
