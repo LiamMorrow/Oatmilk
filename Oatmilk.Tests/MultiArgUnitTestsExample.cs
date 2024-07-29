@@ -24,11 +24,12 @@ public class MultiArgUnitTestsExample
           "Should pass",
           async () =>
           {
-            await Task.Delay(TimeSpan.FromSeconds(5));
+            await Task.Delay(TimeSpan.FromMilliseconds(20));
             Assert.True(true);
           },
-          timeout: TimeSpan.FromSeconds(10)
+          timeout: TimeSpan.FromMilliseconds(100)
         );
+
         It.Each<object>(
           [1, 2, 3, 15, "d", "hello", "world"],
           "Should pass for {0:x}",

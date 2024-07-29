@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Oatmilk.Tests" />
     <Using Include="Xunit" />
   </ItemGroup>
 </Project>

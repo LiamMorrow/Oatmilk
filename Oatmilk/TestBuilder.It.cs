@@ -149,7 +149,7 @@ public static partial class TestBuilder
         body,
         new(
           Description: Description,
-          ScopeIndex: CurrentScopeNotNull.TestMethods.Count,
+          ScopeIndex: CurrentScopeNotNull.TestBlocks.Count,
           LineNumber: LineNumber,
           FilePath: FilePath,
           IsOnly: IsOnly,
@@ -157,7 +157,7 @@ public static partial class TestBuilder
           Timeout: Timeout ?? CurrentScopeNotNull.Metadata.Timeout
         )
       );
-      CurrentScopeNotNull.TestMethods.Add(tm);
+      CurrentScopeNotNull.TestBlocks.Add(tm);
     }
   }
 
@@ -237,7 +237,7 @@ public static partial class TestBuilder
           (testInput) => body(val, testInput),
           new(
             Description: DescriptionResolver(val),
-            ScopeIndex: CurrentScopeNotNull.TestMethods.Count,
+            ScopeIndex: CurrentScopeNotNull.TestBlocks.Count,
             LineNumber: LineNumber,
             FilePath: FilePath,
             IsOnly: IsOnly,
@@ -245,7 +245,7 @@ public static partial class TestBuilder
             Timeout: Timeout ?? CurrentScopeNotNull.Metadata.Timeout
           )
         );
-        CurrentScopeNotNull.TestMethods.Add(tm);
+        CurrentScopeNotNull.TestBlocks.Add(tm);
       }
     }
   }
