@@ -52,13 +52,6 @@ internal class XunitOatmilkMessageBus(IMessageBus messageBus, IXunitTestCase xun
     );
   }
 
-  public void OnTestOutput(TestBlock testBlock, TestScope testScope, string output)
-  {
-    messageBus.QueueMessage(
-      new global::Xunit.Sdk.TestOutput(GetTest(testBlock, testScope), output)
-    );
-  }
-
   public void OnTestPassed(
     TestBlock testBlock,
     TestScope testScope,
@@ -81,6 +74,6 @@ internal class XunitOatmilkMessageBus(IMessageBus messageBus, IXunitTestCase xun
     messageBus.QueueMessage(new TestStarting(GetTest(testBlock, testScope)));
   }
 
-  private ITest GetTest(TestBlock testBlock, TestScope testScope) =>
-    new XunitTest(xunitTestMethod, testBlock.GetDescription(testScope));
+  private XunitTest GetTest(TestBlock testBlock, TestScope testScope) =>
+    new(xunitTestMethod, testBlock.GetDescription(testScope));
 }

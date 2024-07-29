@@ -27,7 +27,7 @@ public class MultiArgUnitTestsExample
             await Task.Delay(TimeSpan.FromMilliseconds(20));
             Assert.True(true);
           },
-          timeout: TimeSpan.FromMilliseconds(100)
+          new(Timeout: TimeSpan.FromMilliseconds(100))
         );
 
         It.Each<object>(

@@ -18,8 +18,6 @@ internal interface IOatmilkMessageBus
     string output
   );
 
-  public void OnTestOutput(TestBlock testBlock, TestScope testScope, string output);
-
   public void OnTestPassed(
     TestBlock testBlock,
     TestScope testScope,
@@ -54,8 +52,6 @@ internal class DummyMessageBus : IOatmilkMessageBus
     TimeSpan executionTime,
     string output
   ) { }
-
-  public void OnTestOutput(TestBlock testBlock, TestScope testScope, string output) { }
 
   public void OnTestPassed(
     TestBlock testBlock,

@@ -12,15 +12,18 @@ public static partial class TestBuilder
 
   /// <summary>
   /// Obsolete. Descriptions must be synchronous, and async bodies should be moved to <see cref="BeforeAll(Func{Task})"/>, <see cref="BeforeEach(Func{Task})" />.
-  /// Use <see cref="Describe(string,Action,TimeSpan?,int,string)"/> instead.
+  /// Use <see cref="Describe(string,Action,TestOptions,int,string)"/> instead.
   /// </summary>
   /// <param name="description"></param>
   /// <param name="body"></param>
-  /// <param name="timeout"></param>
+  /// <param name="testOptions">The options for each test in the test suite, including the timeout</param>
   /// <exception cref="InvalidOperationException">This method will always throw an exception.</exception>
   [Obsolete(InvalidDescribeAsyncMethodCallMessage)]
-  public static void Describe(string description, Func<Task> body, TimeSpan? timeout = null) =>
-    throw new InvalidOperationException(InvalidDescribeAsyncMethodCallMessage);
+  public static void Describe(
+    string description,
+    Func<Task> body,
+    TestOptions testOptions = default
+  ) => throw new InvalidOperationException(InvalidDescribeAsyncMethodCallMessage);
 
   /// <summary>
   /// Describes a suite of tests.
@@ -28,28 +31,28 @@ public static partial class TestBuilder
   /// </summary>
   /// <param name="description">The description of this block of the test suite.</param>
   /// <param name="body">A callback which is immediately invoked to describe tests</param>
-  /// <param name="timeout">The timeout for each test in the test suite</param>
+  /// <param name="testOptions">The options for each test in the test suite, including the timeout</param>
   /// <param name="lineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="filePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   public static void Describe(
     string description,
     Action body,
-    TimeSpan? timeout = null,
+    TestOptions testOptions = default,
     [CallerLineNumber] int lineNumber = 0,
     [CallerFilePath] string filePath = ""
-  ) => Describe(description, timeout, lineNumber, filePath).As(body);
+  ) => Describe(description, testOptions, lineNumber, filePath).As(body);
 
   /// <summary>
   /// Describes a suite of tests using a fluent syntax.  Specify the body of the suite using the <see cref="DescribeBlock.As(Action)" /> method.
   /// </summary>
   /// <param name="description">The description of this block of the test suite.</param>
-  /// <param name="timeout">The timeout for each test in the test suite</param>
+  /// <param name="testOptions">The options for each test in the test suite, including the timeout</param>
   /// <param name="lineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="filePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <returns>A <see cref="DescribeBlock" /> object which allows for the creation of nested test suites.</returns>
   public static DescribeBlock Describe(
     string description,
-    TimeSpan? timeout = null,
+    TestOptions testOptions = default,
     [CallerLineNumber] int lineNumber = 0,
     [CallerFilePath] string filePath = ""
   )
@@ -58,7 +61,7 @@ public static partial class TestBuilder
       description,
       IsOnly: false,
       IsSkipped: false,
-      Timeout: timeout,
+      TestOptions: testOptions,
       lineNumber,
       filePath
     );
@@ -70,14 +73,14 @@ public static partial class TestBuilder
   /// <param name="Description">The description for the block of tests.</param>
   /// <param name="IsOnly">Should be the only test run in the suite</param>
   /// <param name="IsSkipped">Should be skipped</param>
-  /// <param name="Timeout">The timeout for each test in the test suite</param>
+  /// <param name="TestOptions">The options for each test in the test suite, including a timeout</param>
   /// <param name="LineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="FilePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   public record DescribeBlock(
     string Description,
     bool IsOnly,
     bool IsSkipped,
-    TimeSpan? Timeout,
+    TestOptions TestOptions,
     int LineNumber,
     string FilePath
   )
@@ -96,7 +99,7 @@ public static partial class TestBuilder
         FilePath: FilePath,
         IsOnly: IsOnly,
         IsSkipped: IsSkipped,
-        Timeout: Timeout ?? CurrentScope?.Metadata.Timeout ?? DefaultTimeout
+        Timeout: TestOptions.Timeout ?? CurrentScope?.Metadata.Timeout ?? DefaultTimeout
       );
       if (RootScope == null)
       {
@@ -135,7 +138,7 @@ public static partial class TestBuilder
   /// <param name="Description">The description of the tests. This supports a format string taking</param>
   /// <param name="IsOnly">Should be the only test run in the suite</param>
   /// <param name="IsSkipped">Should be skipped</param>
-  /// <param name="Timeout">The timeout for the test</param>
+  /// <param name="TestOptions">The options for the tests, including a timeout</param>
   /// <param name="LineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="FilePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   public record DescribeEachBlock<T>(
@@ -143,7 +146,7 @@ public static partial class TestBuilder
     Func<T, string> Description,
     bool IsOnly,
     bool IsSkipped,
-    TimeSpan? Timeout,
+    TestOptions TestOptions,
     int LineNumber,
     string FilePath
   )
@@ -165,7 +168,7 @@ public static partial class TestBuilder
           FilePath: FilePath,
           IsOnly: IsOnly,
           IsSkipped: IsSkipped,
-          Timeout: Timeout
+          TestOptions: TestOptions
         ).As(() => body(val));
       }
     }
