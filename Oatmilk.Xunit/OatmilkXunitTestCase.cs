@@ -44,7 +44,23 @@ internal partial class OatmilkXunitTestCase(
   public TestBlock TestBlock { get; set; } = testBlock;
   public ITestMethod TestMethod { get; set; } = callingMethod;
   public object[] TestMethodArguments { get; set; } = [];
-  public Dictionary<string, List<string>> Traits { get; set; } = [];
+  public Dictionary<string, List<string>> Traits
+  {
+    get =>
+      new()
+      {
+        {
+          "Category",
+          new List<string> { "Oatmilk" }
+        },
+        {
+          "Name",
+          new List<string> { DisplayName }
+        }
+      };
+    set { }
+  }
+
   public string UniqueID =>
     $"{TestBlock.Metadata.FilePath}:{TestBlock.Metadata.LineNumber}:{TestBlock.Metadata.ScopeIndex}";
 

@@ -15,7 +15,7 @@
 <!-- A spacer -->
 <p>&nbsp;</p>
 
-<p align="center"><img src="./Assets/Oatie.png" width=256/></p>
+<p align="center"><img alt="Oatmilk Mascot - Oatie" src="./Assets/Oatie.png" width=256/></p>
 
 <h2 align="center">🥛 Refreshing .NET Testing</h2>
 
@@ -25,7 +25,7 @@ Oatmilk is a testing library for .NET which allows you to write declarative test
 
 Oatmilk currently supports running in a test project configured with [xunit](https://github.com/xunit/xunit). You can run your existing xunit `Facts` and `Theories` alongside `Oatmilk` tests.
 
-Note that Oatmilk does not intend to be a full test framework, as such, things like mocking and asserting are out of scope. There are many other great tools for the job. Have a look at [FluentAssertions](https://github.com/fluentassertions/fluentassertions) for a great assertions library.
+Note that Oatmilk does not intend to be a full test framework, as such, things like mocking and asserting are out of scope. The assertions provided by Xunit/Nunit/MsTest are entirely compatible with Oatmilk. There are also many other great tools for the job. Have a look at [FluentAssertions](https://github.com/fluentassertions/fluentassertions) for a great assertions library. Or [NSubstitute](https://nsubstitute.github.io/) for your mocking needs.
 
 ## Getting Started
 
@@ -67,6 +67,12 @@ Your tests should now show up in your IDE, and can be run with:
 
 ```bash
 dotnet test
+```
+
+You can run specific tests by filtering:
+
+```bash
+dotnet test --filter "Name~My Test Suite"
 ```
 
 ### Test setup and teardown
