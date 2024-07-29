@@ -1,17 +1,9 @@
-<p align="center">
+<p align="center"><a href="https://www.nuget.org/packages/Oatmilk/"><img src="https://img.shields.io/nuget/v/Oatmilk?style=flat&label=Oatmilk" alt="NuGet Version"></a>
+<a href="https://www.nuget.org/packages/Oatmilk.Xunit/"><img alt="NuGet Version" src="https://img.shields.io/nuget/v/Oatmilk.Xunit?style=flat&label=Oatmilk.Xunit"></a>
+<a href="https://opensource.org/licenses/MIT" rel="nofollow"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a></p>
 
-[![NuGet Version](https://img.shields.io/nuget/v/Oatmilk?style=flat&label=Oatmilk)](https://www.nuget.org/packages/Oatmilk/)
-[![NuGet Version](https://img.shields.io/nuget/v/Oatmilk.Xunit?style=flat&label=Oatmilk.Xunit)](https://www.nuget.org/packages/Oatmilk.Xunit/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-</p>
-<p align="center">
-
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/LiamMorrow/Oatmilk/build.yml)
-[![codecov](https://codecov.io/github/LiamMorrow/Oatmilk/graph/badge.svg?token=5UVDXIJVGV)](https://codecov.io/github/LiamMorrow/Oatmilk)
-
-</p>
-
+<p align="center"><a href="https://github.com/LiamMorrow/Oatmilk/actions"><img src="https://img.shields.io/github/actions/workflow/status/LiamMorrow/Oatmilk/build.yml" alt="GitHub Actions Workflow Status"></a>
+<a href="https://codecov.io/github/LiamMorrow/Oatmilk"><img alt="codecov" src="https://codecov.io/github/LiamMorrow/Oatmilk/graph/badge.svg?token=5UVDXIJVGV"></a></p>
 <!-- A spacer -->
 <p>&nbsp;</p>
 
