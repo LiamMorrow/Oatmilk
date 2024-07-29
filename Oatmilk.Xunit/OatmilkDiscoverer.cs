@@ -31,29 +31,32 @@ internal class OatmilkDiscoverer : IXunitTestCaseDiscoverer
     TestScope testScope,
     ITestMethod callingMethod,
     bool anyOnlyTestsInEntireScope
-  )
-  {
-    foreach (var testMethod in testScope.TestMethods)
-    {
-      yield return new OatmilkXunitTestCase(
-        testScope,
-        testMethod,
+  ) =>
+    TraverseScopesAndYieldTestBlocks(testScope, anyOnlyTestsInEntireScope)
+      .Select(x => new OatmilkXunitTestCase(
+        x.TestScope,
+        x.TestBlock,
         callingMethod,
         anyOnlyTestsInEntireScope
-      );
+      ));
+
+  internal static IEnumerable<(
+    TestScope TestScope,
+    TestBlock TestBlock
+  )> TraverseScopesAndYieldTestBlocks(TestScope testScope, bool anyOnlyTestsInEntireScope)
+  {
+    foreach (var testBlock in testScope.TestBlocks)
+    {
+      yield return (testScope, testBlock);
     }
 
     foreach (var childScope in testScope.Children)
     {
       foreach (
-        var testCase in TraverseScopesAndYieldTestCases(
-          childScope,
-          callingMethod,
-          anyOnlyTestsInEntireScope
-        )
+        var testBlock in TraverseScopesAndYieldTestBlocks(childScope, anyOnlyTestsInEntireScope)
       )
       {
-        yield return testCase;
+        yield return testBlock;
       }
     }
   }

@@ -20,12 +20,15 @@ internal partial class OatmilkXunitTestCase(
   public IMethodInfo Method => TestMethod.Method;
   public int Timeout => (int)TestBlock.Metadata.Timeout.TotalSeconds;
   public string DisplayName => TestBlock.GetDescription(TestScope);
+
+  private bool SkippingDueToParentScopeOnly =>
+    AnyOnlyTestsInEntireScope
+    && !TestBlock.Metadata.IsOnly
+    && !TestScope.AnyParentsOrThis(x => x.Metadata.IsOnly);
   public string? SkipReason =>
     TestBlock.Metadata.IsSkipped || TestScope.AnyParentsOrThis(x => x.Metadata.IsSkipped)
       ? "Used a Skip method"
-      : AnyOnlyTestsInEntireScope
-      && !TestBlock.Metadata.IsOnly
-      && !TestScope.AnyParentsOrThis(x => x.Metadata.IsOnly)
+      : SkippingDueToParentScopeOnly
         ? "Only tests are present in this scope"
         : null;
   public ISourceInformation? SourceInformation
@@ -73,16 +76,9 @@ internal partial class OatmilkXunitTestCase(
   )
   {
     var oatmilkMessabeBus = new XunitOatmilkMessageBus(messageBus, this);
-    if (SkipReason != null)
-    {
-      oatmilkMessabeBus.OnTestSkipped(TestBlock, TestScope, SkipReason);
-      return new RunSummary { Total = 1, Skipped = 1 };
-    }
-    var result = await new OatmilkTestBlockRunner(
-      TestScope,
-      TestBlock,
-      oatmilkMessabeBus
-    ).RunAsync();
+    var result = await new OatmilkTestBlockRunner(TestScope, TestBlock, oatmilkMessabeBus).RunAsync(
+      SkippingDueToParentScopeOnly
+    );
 
     return new RunSummary
     {

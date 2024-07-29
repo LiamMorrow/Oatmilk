@@ -10,7 +10,7 @@ internal record TestScope(TestScope? Parent, TestMetadata Metadata)
   internal List<TestSetupMethod> TestBeforeEachs { get; } = [];
   internal List<TestAfterEachMethod> TestAfterEachs { get; } = [];
   internal List<TestTeardownMethod> TestAfterAlls { get; } = [];
-  internal List<TestBlock> TestMethods { get; } = [];
+  internal List<TestBlock> TestBlocks { get; } = [];
   internal List<TestScope> Children { get; } = [];
 
   internal string ScopeIndexPath =>
@@ -52,7 +52,7 @@ internal record TestScope(TestScope? Parent, TestMetadata Metadata)
 
   internal IEnumerable<(TestBlock TestBlock, TestScope TestScope)> EnumerateTests()
   {
-    foreach (var test in TestMethods)
+    foreach (var test in TestBlocks)
     {
       yield return (test, this);
     }
@@ -67,7 +67,7 @@ internal record TestScope(TestScope? Parent, TestMetadata Metadata)
   }
 
   internal bool AnyScopesOrTestsAreOnly =>
-    AnyChildrenOrThis(sc => sc.Metadata.IsOnly || sc.TestMethods.Any(tm => tm.Metadata.IsOnly));
+    AnyChildrenOrThis(sc => sc.Metadata.IsOnly || sc.TestBlocks.Any(tm => tm.Metadata.IsOnly));
 }
 
 internal record TestSetupMethod(Func<TestInput, Task> Body);

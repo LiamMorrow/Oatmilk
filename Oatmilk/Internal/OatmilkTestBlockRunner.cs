@@ -10,13 +10,24 @@ internal class OatmilkTestBlockRunner(
 {
   private readonly TestScope testScope = testScope;
 
-  public async Task<OatmilkRunSummary> RunAsync()
+  public async Task<OatmilkRunSummary> RunAsync(bool skipDueToParentScopeOnly)
   {
     var tokenTimeout = new CancellationTokenSource();
     var testOutputSink = new TestOutputSink();
     var testInput = new TestInput(testOutputSink, tokenTimeout.Token);
 
     var result = new OatmilkRunSummary(Total: 1);
+
+    if (skipDueToParentScopeOnly)
+    {
+      messageBus.OnTestSkipped(testBlock, testScope, "Parent scope has an only block");
+      return result with { Skipped = 1 };
+    }
+    if (testBlock.Metadata.IsSkipped || testScope.AnyParentsOrThis(x => x.Metadata.IsSkipped))
+    {
+      messageBus.OnTestSkipped(testBlock, testScope, "Skipped using a Skip method");
+      return result with { Skipped = 1 };
+    }
 
     var sw = Stopwatch.StartNew();
 

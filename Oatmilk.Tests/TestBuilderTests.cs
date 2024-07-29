@@ -65,8 +65,8 @@ public class TestBuilderTests
               () =>
               {
                 var rootScope = TestBuilder.ConsumeRootScope();
-                rootScope.TestMethods.Should().HaveCount(1);
-                rootScope.TestMethods.Single().Metadata.Description.Should().Be("top level it");
+                rootScope.TestBlocks.Should().HaveCount(1);
+                rootScope.TestBlocks.Single().Metadata.Description.Should().Be("top level it");
               }
             );
           }
@@ -95,11 +95,11 @@ public class TestBuilderTests
               () =>
               {
                 var rootScope = TestBuilder.ConsumeRootScope();
-                rootScope.TestMethods.Should().HaveCount(0);
+                rootScope.TestBlocks.Should().HaveCount(0);
                 rootScope.Children.Should().HaveCount(1);
                 var nestedScope = rootScope.Children.Single();
-                nestedScope.TestMethods.Should().HaveCount(1);
-                nestedScope.TestMethods.Single().Metadata.Description.Should().Be("Nested It");
+                nestedScope.TestBlocks.Should().HaveCount(1);
+                nestedScope.TestBlocks.Single().Metadata.Description.Should().Be("Nested It");
               }
             );
 
@@ -146,13 +146,13 @@ public class TestBuilderTests
               {
                 var rootScope = TestBuilder.ConsumeRootScope();
                 var nestedScope = rootScope.Children.Single();
-                nestedScope.TestMethods.Should().HaveCount(1);
-                nestedScope.TestMethods.Single().Metadata.Description.Should().Be("Nested It");
+                nestedScope.TestBlocks.Should().HaveCount(1);
+                nestedScope.TestBlocks.Single().Metadata.Description.Should().Be("Nested It");
                 nestedScope.Children.Should().HaveCount(1);
                 var doubleNestedScope = nestedScope.Children.Single();
-                doubleNestedScope.TestMethods.Should().HaveCount(1);
+                doubleNestedScope.TestBlocks.Should().HaveCount(1);
                 doubleNestedScope
-                  .TestMethods.Single()
+                  .TestBlocks.Single()
                   .Metadata.Description.Should()
                   .Be("Double Nested It");
               }
