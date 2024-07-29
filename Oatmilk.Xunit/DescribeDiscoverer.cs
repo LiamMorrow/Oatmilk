@@ -32,7 +32,7 @@ public sealed class DescribeAttribute(
 {
   /// <summary>
   /// The description of the test suite.
-  /// This is passed to the <see cref="TestBuilder.Describe(string, Action, TimeSpan?, int,string)"/> method.
+  /// This is passed to the <see cref="TestBuilder.Describe(string, Action, TestOptions, int,string)"/> method.
   /// </summary>
   public string Description { get; } = Description;
 
@@ -47,7 +47,7 @@ public sealed class DescribeAttribute(
   public int LineNumber { get; } = LineNumber;
 
   /// <inheritdoc/>
-  public override int Timeout { get; set; } = TestBuilder.DefaultTimeout.Seconds;
+  public override int Timeout { get; set; } = (int)TestBuilder.DefaultTimeout.TotalSeconds;
 }
 
 internal class DescribeDiscoverer : OatmilkDiscoverer
@@ -59,7 +59,7 @@ internal class DescribeDiscoverer : OatmilkDiscoverer
     TestBuilder.Describe(
       attribute.GetNamedArgument<string>("Description"),
       () => tm.Method.ToRuntimeMethod().Invoke(instance, null),
-      TimeSpan.FromSeconds(timeoutSeconds),
+      new TestOptions(TimeSpan.FromSeconds(timeoutSeconds)),
       attribute.GetNamedArgument<int>(nameof(DescribeAttribute.LineNumber)),
       attribute.GetNamedArgument<string>(nameof(DescribeAttribute.FileName))
     );

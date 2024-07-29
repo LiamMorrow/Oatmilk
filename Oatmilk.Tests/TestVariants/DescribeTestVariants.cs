@@ -153,7 +153,7 @@ public class DescribeTestVariants
   }
 
   [Describe("OatmilkDiscoverer tests enumeration")]
-  public void Spec2()
+  public void TestEnumerationAndRunning()
   {
     TestScope rootScope = null!;
     List<(TestScope TestScope, TestBlock TestBlock)> discoveredTests = null!;
@@ -256,6 +256,72 @@ public class DescribeTestVariants
 
             // No tests were directly skipped
             discoveredTests.Select(x => x.TestBlock.Metadata.IsSkipped).Should().NotContain(true);
+          }
+        );
+      }
+    );
+
+    Describe(
+      "For a describe with a timeout",
+      () =>
+      {
+        BeforeAll(() =>
+        {
+          Setup(() =>
+          {
+            Describe(
+              "A test suite with a timeout",
+              () =>
+              {
+                It(
+                  "should fail because the timeout is too short",
+                  () => Task.Delay(TimeSpan.FromMilliseconds(100))
+                );
+
+                It("should pass", () => Task.Delay(TimeSpan.FromMilliseconds(5)));
+              },
+              new(Timeout: TimeSpan.FromMilliseconds(10))
+            );
+          });
+        });
+
+        It(
+          "should pass the test which runs within the timeout",
+          () =>
+          {
+            var test = discoveredTests.Single(x =>
+              x.TestBlock.Metadata.Description == "should pass"
+            );
+            var testRunner = new OatmilkTestBlockRunner(
+              test.TestScope,
+              test.TestBlock,
+              new DummyMessageBus()
+            );
+
+            var result = testRunner.RunAsync(false).Result;
+            result.Passed.Should().Be(1);
+            result.Failed.Should().Be(0);
+            result.Skipped.Should().Be(0);
+          }
+        );
+
+        It(
+          "should fail the test which runs outside the timeout",
+          () =>
+          {
+            var test = discoveredTests.Single(x =>
+              x.TestBlock.Metadata.Description == "should fail because the timeout is too short"
+            );
+            var testRunner = new OatmilkTestBlockRunner(
+              test.TestScope,
+              test.TestBlock,
+              new DummyMessageBus()
+            );
+
+            var result = testRunner.RunAsync(false).Result;
+            result.Passed.Should().Be(0);
+            result.Failed.Should().Be(1);
+            result.Skipped.Should().Be(0);
           }
         );
       }

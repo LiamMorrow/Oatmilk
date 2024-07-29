@@ -10,16 +10,16 @@ public static partial class TestBuilder
   /// </summary>
   /// <param name="description">The description of the test</param>
   /// <param name="body">The test body. Assertions should go in here</param>
-  /// <param name="timeout">The timeout for the test</param>
+  /// <param name="testOptions">The options for the test, including the timeout</param>
   /// <param name="lineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="filePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   public static void It(
     string description,
     Func<Task> body,
-    TimeSpan? timeout = null,
+    TestOptions testOptions = default,
     [CallerLineNumber] int lineNumber = 0,
     [CallerFilePath] string filePath = ""
-  ) => It(description, timeout, lineNumber, filePath).When(body);
+  ) => It(description, testOptions, lineNumber, filePath).When(body);
 
   /// <summary>
   /// Adds a test to the current scope.
@@ -27,16 +27,16 @@ public static partial class TestBuilder
   /// </summary>
   /// <param name="description">The description of the test</param>
   /// <param name="body">The test body. Assertions should go in here</param>
-  /// <param name="timeout">The timeout for the test</param>
+  /// <param name="testOptions">The options for the test, including the timeout</param>
   /// <param name="lineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="filePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   public static void It(
     string description,
     Func<TestInput, Task> body,
-    TimeSpan? timeout = null,
+    TestOptions testOptions = default,
     [CallerLineNumber] int lineNumber = 0,
     [CallerFilePath] string filePath = ""
-  ) => It(description, timeout, lineNumber, filePath).When(body);
+  ) => It(description, testOptions, lineNumber, filePath).When(body);
 
   /// <summary>
   /// Adds a test to the current scope.
@@ -44,16 +44,16 @@ public static partial class TestBuilder
   /// </summary>
   /// <param name="description">The description of the test</param>
   /// <param name="body">The test body. Assertions should go in here</param>
-  /// <param name="timeout">The timeout for the test</param>
+  /// <param name="testOptions">The options for the test, including the timeout</param>
   /// <param name="lineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="filePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   public static void It(
     string description,
     Action body,
-    TimeSpan? timeout = null,
+    TestOptions testOptions = default,
     [CallerLineNumber] int lineNumber = 0,
     [CallerFilePath] string filePath = ""
-  ) => It(description, timeout, lineNumber, filePath).When(body);
+  ) => It(description, testOptions, lineNumber, filePath).When(body);
 
   /// <summary>
   /// Adds a test to the current scope.
@@ -61,31 +61,31 @@ public static partial class TestBuilder
   /// </summary>
   /// <param name="description">The description of the test</param>
   /// <param name="body">The test body. Assertions should go in here</param>
-  /// <param name="timeout">The timeout for the test</param>
+  /// <param name="testOptions">The options for the test, including the timeout</param>
   /// <param name="lineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="filePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   public static void It(
     string description,
     Action<TestInput> body,
-    TimeSpan? timeout = null,
+    TestOptions testOptions = default,
     [CallerLineNumber] int lineNumber = 0,
     [CallerFilePath] string filePath = ""
-  ) => It(description, timeout, lineNumber, filePath).When(body);
+  ) => It(description, testOptions, lineNumber, filePath).When(body);
 
   /// <summary>
   /// Adds a test to the current scope.
   /// The body of the test will be run when the test is executed.
   /// </summary>
   /// <param name="description">The description of the test</param>
-  /// <param name="timeout">The timeout for the test</param>
+  /// <param name="testOptions">The options for the test, including the timeout</param>
   /// <param name="lineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="filePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   public static ItBlock It(
     string description,
-    TimeSpan? timeout = null,
+    TestOptions testOptions = default,
     [CallerLineNumber] int lineNumber = 0,
     [CallerFilePath] string filePath = ""
-  ) => new(description, false, false, timeout, lineNumber, filePath);
+  ) => new(description, false, false, testOptions, lineNumber, filePath);
 
   /// <summary>
   /// Adds a test to the current scope, configured with a fluent API.
@@ -93,14 +93,14 @@ public static partial class TestBuilder
   /// <param name="Description">The description of the test</param>
   /// <param name="IsOnly">Should be the only test run in the suite</param>
   /// <param name="IsSkipped">Should be skipped</param>
-  /// <param name="Timeout">The timeout for the test</param>
+  /// <param name="TestOptions">The options for the test including a timeout</param>
   /// <param name="LineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="FilePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   public record ItBlock(
     string Description,
     bool IsOnly,
     bool IsSkipped,
-    TimeSpan? Timeout,
+    TestOptions TestOptions,
     int LineNumber,
     string FilePath
   )
@@ -154,7 +154,7 @@ public static partial class TestBuilder
           FilePath: FilePath,
           IsOnly: IsOnly,
           IsSkipped: IsSkipped,
-          Timeout: Timeout ?? CurrentScopeNotNull.Metadata.Timeout
+          Timeout: TestOptions.Timeout ?? CurrentScopeNotNull.Metadata.Timeout
         )
       );
       CurrentScopeNotNull.TestBlocks.Add(tm);
@@ -168,7 +168,7 @@ public static partial class TestBuilder
   /// <param name="DescriptionResolver">A callback function to generate the description of the tests.  It is passed each value from <paramref name="Values"/></param>
   /// <param name="IsOnly">Should be the only test run in the suite</param>
   /// <param name="IsSkipped">Should be skipped</param>
-  /// <param name="Timeout">The timeout for the test</param>
+  /// <param name="TestOptions">The options for the test, including a timeout</param>
   /// <param name="LineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="FilePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   public record ItEachBlock<T>(
@@ -176,7 +176,7 @@ public static partial class TestBuilder
     Func<T, string> DescriptionResolver,
     bool IsOnly,
     bool IsSkipped,
-    TimeSpan? Timeout,
+    TestOptions TestOptions,
     int LineNumber,
     string FilePath
   )
@@ -242,7 +242,7 @@ public static partial class TestBuilder
             FilePath: FilePath,
             IsOnly: IsOnly,
             IsSkipped: IsSkipped,
-            Timeout: Timeout ?? CurrentScopeNotNull.Metadata.Timeout
+            Timeout: TestOptions.Timeout ?? CurrentScopeNotNull.Metadata.Timeout
           )
         );
         CurrentScopeNotNull.TestBlocks.Add(tm);

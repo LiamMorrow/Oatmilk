@@ -114,8 +114,10 @@ internal partial class OatmilkXunitTestCase(
       TestBuilder.Describe(
         describeAttribute.GetNamedArgument<string>(nameof(DescribeAttribute.Description)),
         () => TestMethod.Method.ToRuntimeMethod().Invoke(instance, null),
-        TimeSpan.FromSeconds(
-          describeAttribute.GetNamedArgument<int>(nameof(DescribeAttribute.Timeout))
+        new TestOptions(
+          TimeSpan.FromSeconds(
+            describeAttribute.GetNamedArgument<int>(nameof(DescribeAttribute.Timeout))
+          )
         ),
         describeAttribute.GetNamedArgument<int>(nameof(DescribeAttribute.LineNumber)),
         describeAttribute.GetNamedArgument<string>(nameof(DescribeAttribute.FileName))

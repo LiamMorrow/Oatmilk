@@ -15,17 +15,17 @@ public static partial class Describe
   /// <param name="values">A list of values to pass to the description</param>
   /// <param name="descriptionFormatString">A format string that is used to generate the test's description.  Each value from <paramref name="values"/> is used as the 0th param.</param>
   /// <param name="body">The method body of the description. Each value from <paramref name="values"/> is passed to this.</param>
-  /// <param name="timeout">The timeout for each test in the test suite</param>
+  /// <param name="testOptions">The options for each test in the test suite, including the timeout</param>
   /// <param name="lineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="filePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   public static void Skip<T>(
     IEnumerable<T> values,
     string descriptionFormatString,
     Action<T> body,
-    TimeSpan? timeout = null,
+    TestOptions testOptions = default,
     [CallerLineNumber] int lineNumber = 0,
     [CallerFilePath] string filePath = ""
-  ) => Skip(values, descriptionFormatString, timeout, lineNumber, filePath).As(body);
+  ) => Skip(values, descriptionFormatString, testOptions, lineNumber, filePath).As(body);
 
   /// <summary>
   /// Creates a suite of tests that will be skipped.
@@ -34,45 +34,45 @@ public static partial class Describe
   /// <param name="values">A list of values to pass to the description</param>
   /// <param name="descriptionResolver">A function that is used to generate the test's description.  Each value from <paramref name="values"/> is passed to it.</param>
   /// <param name="body">The method body of the description. Each value from <paramref name="values"/> is passed to this.</param>
-  /// <param name="timeout">The timeout for each test in the test suite</param>
+  /// <param name="testOptions">The options for each test in the test suite, including the timeout</param>
   /// <param name="lineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="filePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   public static void Skip<T>(
     IEnumerable<T> values,
     Func<T, string> descriptionResolver,
     Action<T> body,
-    TimeSpan? timeout = null,
+    TestOptions testOptions = default,
     [CallerLineNumber] int lineNumber = 0,
     [CallerFilePath] string filePath = ""
-  ) => Skip(values, descriptionResolver, timeout, lineNumber, filePath).As(body);
+  ) => Skip(values, descriptionResolver, testOptions, lineNumber, filePath).As(body);
 
   /// <summary>
   /// Creates a suite of tests that will be skipped.
   /// </summary>
   /// <param name="description">The description of the describe block</param>
   /// <param name="body">The method body of the description</param>
-  /// <param name="timeout">The timeout for each test in the test suite</param>
+  /// <param name="testOptions">The options for each test in the test suite, including the timeout</param>
   /// <param name="lineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="filePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   public static void Skip(
     string description,
     Action body,
-    TimeSpan? timeout = null,
+    TestOptions testOptions = default,
     [CallerLineNumber] int lineNumber = 0,
     [CallerFilePath] string filePath = ""
-  ) => Skip(description, timeout, lineNumber, filePath).As(body);
+  ) => Skip(description, testOptions, lineNumber, filePath).As(body);
 
   /// <summary>
   /// A fluent api for creating a suite of tests that will be skipped.
   /// See <see cref="DescribeBlock.As(Action)"/>.
   /// </summary>
   /// <param name="description">The description of the describe block</param>
-  /// <param name="timeout">The timeout for each test in the test suite</param>
+  /// <param name="testOptions">The options for each test in the test suite, including the timeout</param>
   /// <param name="lineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="filePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   public static DescribeBlock Skip(
     string description,
-    TimeSpan? timeout = null,
+    TestOptions testOptions = default,
     [CallerLineNumber] int lineNumber = 0,
     [CallerFilePath] string filePath = ""
   ) =>
@@ -80,7 +80,7 @@ public static partial class Describe
       Description: description,
       IsOnly: false,
       IsSkipped: true,
-      Timeout: timeout,
+      TestOptions: testOptions,
       LineNumber: lineNumber,
       FilePath: filePath
     );
@@ -92,16 +92,16 @@ public static partial class Describe
   /// <typeparam name="T">The type of the data to be passed to the test's method body</typeparam>
   /// <param name="values">A list of values to pass to the test description</param>
   /// <param name="descriptionFormatString">A format string that is used to generate the test's description.  Each value from <paramref name="values"/> is used as the 0th param.</param>
-  /// <param name="timeout">The timeout for each test in the test suite</param>
+  /// <param name="testOptions">The options for each test in the test suite, including the timeout</param>
   /// <param name="lineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="filePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   public static DescribeEachBlock<T> Skip<T>(
     IEnumerable<T> values,
     string descriptionFormatString,
-    TimeSpan? timeout = null,
+    TestOptions testOptions = default,
     [CallerLineNumber] int lineNumber = 0,
     [CallerFilePath] string filePath = ""
-  ) => Skip(values, x => SafeFormat(descriptionFormatString, x), timeout, lineNumber, filePath);
+  ) => Skip(values, x => SafeFormat(descriptionFormatString, x), testOptions, lineNumber, filePath);
 
   /// <summary>
   /// A fluent api for creating a suite of tests that will be skipped.
@@ -110,13 +110,13 @@ public static partial class Describe
   /// <typeparam name="T">The type of the data to be passed to the test's method body</typeparam>
   /// <param name="values">A list of values to pass to the test description</param>
   /// <param name="descriptionResolver">A function that is used to generate the test's description.  Each value from <paramref name="values"/> is passed to it.</param>
-  /// <param name="timeout">The timeout for each test in the test suite</param>
+  /// <param name="testOptions">The options for each test in the test suite, including the timeout</param>
   /// <param name="lineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="filePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   public static DescribeEachBlock<T> Skip<T>(
     IEnumerable<T> values,
     Func<T, string> descriptionResolver,
-    TimeSpan? timeout = null,
+    TestOptions testOptions = default,
     [CallerLineNumber] int lineNumber = 0,
     [CallerFilePath] string filePath = ""
   ) =>
@@ -125,7 +125,7 @@ public static partial class Describe
       descriptionResolver,
       IsOnly: false,
       IsSkipped: true,
-      Timeout: timeout,
+      TestOptions: testOptions,
       lineNumber,
       filePath
     );
@@ -134,11 +134,11 @@ public static partial class Describe
 
   /// <summary>
   /// Descriptions must be synchronous, and async bodies should be moved to <see cref="BeforeAll(Func{Task})"/>, <see cref="BeforeEach(Func{Task})" />.
-  /// Use <see cref="Skip(string,Action,TimeSpan?,int,string)"/> instead.
+  /// Use <see cref="Skip(string,Action,TestOptions,int,string)"/> instead.
   /// </summary>
   /// <param name="description"></param>
   /// <param name="body"></param>
-  /// <param name="timeout">The timeout for each test in the test suite</param>
+  /// <param name="testOptions">The options for each test in the test suite, including the timeout</param>
   /// <param name="lineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="filePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <exception cref="InvalidOperationException">This method will always throw an exception.</exception>
@@ -146,20 +146,20 @@ public static partial class Describe
   public static void Skip(
     string description,
     Func<Task> body,
-    TimeSpan? timeout = null,
+    TestOptions testOptions = default,
     [CallerLineNumber] int lineNumber = 0,
     [CallerFilePath] string filePath = ""
   ) => Skip(description).As(body);
 
   /// <summary>
   /// Descriptions must be synchronous, and async bodies should be moved to <see cref="BeforeAll(Func{Task})"/>, <see cref="BeforeEach(Func{Task})" />.
-  /// Use <see cref="Each{T}(IEnumerable{T},string,Action{T},TimeSpan?,int,string)"/> instead.
+  /// Use <see cref="Each{T}(IEnumerable{T},string,Action{T},TestOptions,int,string)"/> instead.
   /// </summary>
   /// <typeparam name="T"></typeparam>
   /// <param name="values"></param>
   /// <param name="descriptionFormatString"></param>
   /// <param name="body"></param>
-  /// <param name="timeout">The timeout for each test in the test suite</param>
+  /// <param name="testOptions">The options for each test in the test suite, including the timeout</param>
   /// <param name="lineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="filePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <exception cref="InvalidOperationException">This method will always throw an exception.</exception>
@@ -168,20 +168,20 @@ public static partial class Describe
     IEnumerable<T> values,
     string descriptionFormatString,
     Func<T, Task> body,
-    TimeSpan? timeout = null,
+    TestOptions testOptions = default,
     [CallerLineNumber] int lineNumber = 0,
     [CallerFilePath] string filePath = ""
   ) => Skip(values, descriptionFormatString).As(body);
 
   /// <summary>
   /// Descriptions must be synchronous, and async bodies should be moved to <see cref="BeforeAll(Func{Task})"/>, <see cref="BeforeEach(Func{Task})" />.
-  /// Use <see cref="Skip{T}(IEnumerable{T},Func{T,string},Action{T},TimeSpan?,int,string)"/> instead.
+  /// Use <see cref="Skip{T}(IEnumerable{T},Func{T,string},Action{T},TestOptions,int,string)"/> instead.
   /// </summary>
   /// <typeparam name="T"></typeparam>
   /// <param name="values"></param>
   /// <param name="description"></param>
   /// <param name="body"></param>
-  /// <param name="timeout">The timeout for each test in the test suite</param>
+  /// <param name="testOptions">The options for each test in the test suite, including the timeout</param>
   /// <param name="lineNumber">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <param name="filePath">Leave unset, used by the runtime to support running tests via the IDE</param>
   /// <exception cref="InvalidOperationException">This method will always throw an exception.</exception>
@@ -190,7 +190,7 @@ public static partial class Describe
     IEnumerable<T> values,
     Func<T, string> description,
     Func<T, Task> body,
-    TimeSpan? timeout = null,
+    TestOptions testOptions = default,
     [CallerLineNumber] int lineNumber = 0,
     [CallerFilePath] string filePath = ""
   ) => Skip(values, description).As(body);
