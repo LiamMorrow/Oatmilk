@@ -37,7 +37,11 @@ internal class OatmilkTestBlockRunner(
     messageBus.OnBeforeTestSetupFinished(testBlock, testScope);
 
     messageBus.OnTestStarting(testBlock, testScope);
-    var finishedTestContext = new FinishedTestContext(true, testOutputSink.GetOutput());
+    var finishedTestContext = new FinishedTestContext(
+      true,
+      testOutputSink.GetOutput(),
+      testBlock.Metadata.Description
+    );
     try
     {
       tokenTimeout.CancelAfter(testBlock.Metadata.Timeout);
