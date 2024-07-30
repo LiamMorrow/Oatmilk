@@ -71,6 +71,7 @@ internal class OatmilkTestBlockRunner(
     }
 
     messageBus.OnTestFinished(testBlock, testScope, result.Time, testOutputSink.GetOutput().Output);
+    testBlock.HasRun = true;
 
     messageBus.OnAfterTestSetupStarting(testBlock, testScope);
     await RunAfterEachesIncludingParentsAsync(finishedTestContext, testScope);
@@ -99,7 +100,7 @@ internal class OatmilkTestBlockRunner(
 
   private async Task RunAfterAllsIncludingParentsAsync(TestScope testScope)
   {
-    if (testScope.HasRunAfterAlls)
+    if (testScope.HasRunAfterAlls || !testScope.HasRunAllTests)
     {
       return;
     }

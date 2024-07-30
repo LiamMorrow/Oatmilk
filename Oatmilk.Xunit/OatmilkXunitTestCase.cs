@@ -75,8 +75,8 @@ internal partial class OatmilkXunitTestCase(
     CancellationTokenSource cancellationTokenSource
   )
   {
-    var oatmilkMessabeBus = new XunitOatmilkMessageBus(messageBus, this);
-    var result = await new OatmilkTestBlockRunner(TestScope, TestBlock, oatmilkMessabeBus).RunAsync(
+    var oatmilkMessageBus = new XunitOatmilkMessageBus(messageBus, this);
+    var result = await new OatmilkTestBlockRunner(TestScope, TestBlock, oatmilkMessageBus).RunAsync(
       SkippingDueToParentScopeOnly
     );
 
