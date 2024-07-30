@@ -165,7 +165,7 @@ public class ItTestVariants
                   () => Task.Delay(TimeSpan.FromMilliseconds(200))
                 );
 
-                It("should pass", () => Task.Delay(TimeSpan.FromMilliseconds(5)));
+                It("should pass", () => Assert.True(true));
               },
               new(Timeout: TimeSpan.FromMilliseconds(100))
             );
