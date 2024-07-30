@@ -20,7 +20,7 @@ jobs:
           dotnet-version: 8.0.300
       - name: Build Core
         run: dotnet build --configuration Release
-        working-directory: ./Oatmilk
+        working-directory: ./src/Oatmilk
       - name: Build Xunit
         run: dotnet build --configuration Release
-        working-directory: ./Oatmilk.Xunit
+        working-directory: ./src/Oatmilk.Xunit

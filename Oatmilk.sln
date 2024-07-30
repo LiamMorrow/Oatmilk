@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oatmilk", "Oatmilk\Oatmilk.csproj", "{910FC9B8-C044-4431-81B5-E749F7BB7E74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oatmilk", "src\Oatmilk\Oatmilk.csproj", "{910FC9B8-C044-4431-81B5-E749F7BB7E74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oatmilk.Tests", "Oatmilk.Tests\Oatmilk.Tests.csproj", "{6B364EED-8155-4C7E-9EB2-82F9925143F3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oatmilk.Tests", "test\Oatmilk.Tests\Oatmilk.Tests.csproj", "{6B364EED-8155-4C7E-9EB2-82F9925143F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oatmilk.Xunit", "Oatmilk.Xunit\Oatmilk.Xunit.csproj", "{5E7744C1-5102-495E-AF84-E0FB670EAF1C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oatmilk.Xunit", "src\Oatmilk.Xunit\Oatmilk.Xunit.csproj", "{5E7744C1-5102-495E-AF84-E0FB670EAF1C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

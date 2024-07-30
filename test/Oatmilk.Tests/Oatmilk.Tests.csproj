@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Oatmilk.Xunit\Oatmilk.Xunit.csproj" />
+    <ProjectReference Include="..\..\src\Oatmilk.Xunit\Oatmilk.Xunit.csproj" />
   </ItemGroup>
 
 </Project>
