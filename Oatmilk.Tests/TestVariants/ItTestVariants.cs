@@ -162,12 +162,12 @@ public class ItTestVariants
               {
                 It(
                   "should fail because the timeout is too short",
-                  () => Task.Delay(TimeSpan.FromMilliseconds(100))
+                  () => Task.Delay(TimeSpan.FromMilliseconds(200))
                 );
 
                 It("should pass", () => Task.Delay(TimeSpan.FromMilliseconds(5)));
               },
-              new(Timeout: TimeSpan.FromMilliseconds(10))
+              new(Timeout: TimeSpan.FromMilliseconds(100))
             );
           });
         });
