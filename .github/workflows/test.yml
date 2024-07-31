@@ -26,6 +26,9 @@ jobs:
       - name: Run Nunit tests
         run: dotnet test --collect:"XPlat Code Coverage"
         working-directory: ./test/Oatmilk.Tests.Nunit
+      - name: Run MSTest tests
+        run: dotnet test --collect:"XPlat Code Coverage"
+        working-directory: ./test/Oatmilk.Tests.MSTest
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.5.0
         with:
