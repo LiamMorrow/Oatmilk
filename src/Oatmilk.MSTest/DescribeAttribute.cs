@@ -45,6 +45,7 @@ public sealed class DescribeAttribute(
   /// </summary>
   public int LineNumber { get; } = LineNumber;
 
+  ///<inheritdoc/>
   public override TestResult[] Execute(ITestMethod method)
   {
     TestBuilder.Describe(

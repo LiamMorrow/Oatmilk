@@ -37,6 +37,7 @@ public sealed class OatmilkAttribute(
   /// </summary>
   public int LineNumber { get; } = LineNumber;
 
+  ///<inheritdoc/>
   public override TestResult[] Execute(ITestMethod method)
   {
     method.Invoke(null);
