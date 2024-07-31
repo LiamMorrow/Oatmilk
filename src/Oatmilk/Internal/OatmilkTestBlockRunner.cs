@@ -37,7 +37,7 @@ internal class OatmilkTestBlockRunner(
     messageBus.OnTestStarting(testBlock, testScope);
     var finishedTestContext = new FinishedTestContext(
       true,
-      testOutputSink.GetOutput(),
+      new TestOutput([]),
       testBlock.Metadata.Description,
       null
     );
@@ -73,7 +73,13 @@ internal class OatmilkTestBlockRunner(
     testBlock.HasRun = true;
 
     messageBus.OnAfterTestSetupStarting(testBlock, testScope);
-    await RunAfterEachesIncludingParentsAsync(finishedTestContext, testScope);
+    await RunAfterEachesIncludingParentsAsync(
+      finishedTestContext with
+      {
+        TestOutput = testOutputSink.GetOutput(),
+      },
+      testScope
+    );
     await RunAfterAllsIncludingParentsAsync(testScope);
     messageBus.OnAfterTestSetupFinished(testBlock, testScope);
 
