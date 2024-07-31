@@ -13,7 +13,7 @@ internal class OatmilkNunitTestBlockTest : TestMethod
   internal readonly TestScope TestScope;
   internal readonly TestBlock TestBlock;
 
-  public override object?[] Arguments => [TestScope, TestBlock];
+  public override object?[] Arguments => [this];
 
   public OatmilkNunitTestBlockTest(TestScope testScope, TestBlock testBlock)
     : base(MakeMethodInfo())
@@ -39,8 +39,17 @@ internal class OatmilkNunitTestBlockTest : TestMethod
     return new MethodWrapper(typeof(OatmilkNunitTestBlockTest), nameof(RunAsync));
   }
 
-  static Task<OatmilkRunSummary> RunAsync(TestScope scope, TestBlock testBlock)
+  static async Task RunAsync(OatmilkNunitTestBlockTest test)
   {
-    return new OatmilkTestBlockRunner(scope, testBlock, new DummyMessageBus()).RunAsync();
+    var result = await new OatmilkTestBlockRunner(
+      test.TestScope,
+      test.TestBlock,
+      new DummyMessageBus()
+    ).RunAsync();
+
+    if (result.Failed > 0)
+    {
+      throw result.Exception;
+    }
   }
 }

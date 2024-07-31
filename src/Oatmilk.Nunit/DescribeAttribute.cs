@@ -48,7 +48,6 @@ public sealed class DescribeAttribute(
 
   IEnumerable<TestMethod> ITestBuilder.BuildFrom(IMethodInfo method, Test? suite)
   {
-    Console.WriteLine("Building tests from method");
     var instance = Activator.CreateInstance(method.TypeInfo.Type);
     TestBuilder.Describe(
       Description,

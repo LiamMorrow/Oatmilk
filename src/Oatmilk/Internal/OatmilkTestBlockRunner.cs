@@ -58,7 +58,7 @@ internal class OatmilkTestBlockRunner(
     }
     catch (Exception ex)
     {
-      result = result with { Time = sw.Elapsed, Failed = 1, };
+      result = result with { Time = sw.Elapsed, Failed = 1, Exception = ex };
       messageBus.OnTestFailed(
         testBlock,
         testScope,
@@ -66,7 +66,7 @@ internal class OatmilkTestBlockRunner(
         result.Time,
         testOutputSink.GetOutput().Output
       );
-      finishedTestContext = finishedTestContext with { Passed = false, };
+      finishedTestContext = finishedTestContext with { Passed = false, Exception = ex };
     }
 
     messageBus.OnTestFinished(testBlock, testScope, result.Time, testOutputSink.GetOutput().Output);

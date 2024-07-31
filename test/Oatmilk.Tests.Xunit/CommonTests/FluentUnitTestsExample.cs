@@ -3,7 +3,7 @@ namespace Oatmilk.Tests;
 public class FluentUnitTestsExample
 {
   [Oatmilk]
-  public static void TestScope()
+  public void TestScope()
   {
     Describe("My tests using the fluent syntax")
       .As(() =>
