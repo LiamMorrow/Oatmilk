@@ -5,5 +5,6 @@ internal record OatmilkRunSummary(
   int Passed = 0,
   int Failed = 0,
   int Skipped = 0,
-  TimeSpan Time = default
+  TimeSpan Time = default,
+  Exception? Exception = null
 );
