@@ -18,6 +18,8 @@ jobs:
         run: dotnet pack --configuration Release ./src/Oatmilk /p:Version=${{ github.event.release.tag_name }}
       - name: Pack Xunit
         run: dotnet pack --configuration Release ./src/Oatmilk.Xunit /p:Version=${{ github.event.release.tag_name }}
+      - name: Pack Nunit
+        run: dotnet pack --configuration Release ./src/Oatmilk.Nunit /p:Version=${{ github.event.release.tag_name }}
       - name: Push All
         run: find . \( -name "*.nupkg" \) | xargs -n1 dotnet nuget push -s nuget.org -k $PUSH_KEY --skip-duplicate
         env:
