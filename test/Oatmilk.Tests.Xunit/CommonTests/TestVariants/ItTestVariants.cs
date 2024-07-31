@@ -85,7 +85,7 @@ public class ItTestVariants
           () =>
           {
             discoveredTests
-              .Count(x => x.TestBlock.ShouldSkipDueToIsSkippedOnThisOrParent(x.TestScope))
+              .Count(x => x.TestBlock.GetSkipReason(x.TestScope) != SkipReason.DoNotSkip)
               .Should()
               .Be(7);
           }
@@ -105,7 +105,7 @@ public class ItTestVariants
               );
 
               var result = await testRunner.RunAsync();
-              if (test.TestBlock.ShouldSkipDueToIsSkippedOnThisOrParent(test.TestScope))
+              if (test.TestBlock.GetSkipReason(test.TestScope) != SkipReason.DoNotSkip)
               {
                 result.Skipped.Should().Be(1);
               }
@@ -143,7 +143,7 @@ public class ItTestVariants
           () =>
           {
             discoveredTests
-              .Count(x => x.TestBlock.ShouldSkipDueToIsSkippedOnThisOrParent(x.TestScope))
+              .Count(x => x.TestBlock.GetSkipReason(x.TestScope) == SkipReason.SkippedBySkipMethod)
               .Should()
               .Be(0);
 

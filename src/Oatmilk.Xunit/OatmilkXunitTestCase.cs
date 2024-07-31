@@ -20,16 +20,14 @@ internal partial class OatmilkXunitTestCase(
   public int Timeout => (int)TestBlock.Metadata.Timeout.TotalSeconds;
   public string DisplayName => TestBlock.GetDescription(TestScope);
 
-  private bool SkippingDueToParentScopeOnly =>
-    TestScope.RootScope.AnyScopesOrTestsAreOnly
-    && !TestBlock.Metadata.IsOnly
-    && !TestScope.AnyParentsOrThis(x => x.Metadata.IsOnly);
   public string? SkipReason =>
-    TestBlock.ShouldSkipDueToIsSkippedOnThisOrParent(TestScope)
-      ? "Used a Skip method"
-      : SkippingDueToParentScopeOnly
-        ? "Only tests are present in this scope"
-        : null;
+    TestBlock.GetSkipReason(TestScope) switch
+    {
+      Oatmilk.SkipReason.SkippedBySkipMethod => "Used a Skip method",
+      Oatmilk.SkipReason.OnlyTestsInScopeAndThisIsNotOnly => "Only tests are present in this scope",
+      _ => null,
+    };
+
   public ISourceInformation? SourceInformation
   {
     get
@@ -46,6 +44,7 @@ internal partial class OatmilkXunitTestCase(
   public TestBlock TestBlock { get; set; } = testBlock;
   public ITestMethod TestMethod { get; set; } = callingMethod;
   public object[] TestMethodArguments { get; set; } = [];
+
   public Dictionary<string, List<string>> Traits
   {
     get =>

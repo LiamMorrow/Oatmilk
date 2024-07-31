@@ -95,20 +95,14 @@ internal record TestBlock(Func<TestInput, Task> Body, TestMetadata Metadata)
 {
   internal bool HasRun { get; set; }
 
-  internal bool ShouldSkipDueToIsSkippedOnThisOrParent(TestScope scope)
-  {
-    if (Metadata.IsSkipped)
-    {
-      return true;
-    }
-
-    if (scope.AnyParentsOrThis(x => x.Metadata.IsSkipped))
-    {
-      return true;
-    }
-
-    return false;
-  }
+  internal SkipReason GetSkipReason(TestScope scope) =>
+    Metadata.IsSkipped || scope.AnyParentsOrThis(x => x.Metadata.IsSkipped)
+      ? SkipReason.SkippedBySkipMethod
+      : scope.AnyParentsOrThis(x => x.AnyScopesOrTestsAreOnly)
+      && !Metadata.IsOnly
+      && !scope.AnyParentsOrThis(x => x.Metadata.IsOnly)
+        ? SkipReason.OnlyTestsInScopeAndThisIsNotOnly
+        : SkipReason.DoNotSkip;
 
   internal string GetDescription(TestScope scope)
   {
@@ -122,4 +116,11 @@ internal record TestBlock(Func<TestInput, Task> Body, TestMetadata Metadata)
     sb.Append(scope.Metadata.Description).Append('.').Append(Metadata.Description);
     return sb.ToString();
   }
+}
+
+internal enum SkipReason
+{
+  DoNotSkip,
+  SkippedBySkipMethod,
+  OnlyTestsInScopeAndThisIsNotOnly
 }

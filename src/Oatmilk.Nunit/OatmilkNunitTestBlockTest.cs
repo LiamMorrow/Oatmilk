@@ -28,23 +28,18 @@ internal class OatmilkNunitTestBlockTest : TestMethod
     this.Properties.Add("TestBlock.ScopeIndex", TestBlock.Metadata.ScopeIndex);
     this.Properties.Add("TestBlock.Description", TestBlock.Metadata.Description);
 
-    if (TestBlock.ShouldSkipDueToIsSkippedOnThisOrParent(TestScope))
+    if (TestBlock.GetSkipReason(TestScope) != SkipReason.DoNotSkip)
     {
       this.RunState = RunState.Ignored;
     }
   }
 
-  public override TestResult MakeTestResult()
-  {
-    return base.MakeTestResult();
-  }
-
-  private static IMethodInfo MakeMethodInfo()
+  private static MethodWrapper MakeMethodInfo()
   {
     return new MethodWrapper(typeof(OatmilkNunitTestBlockTest), nameof(RunAsync));
   }
 
-  static Task RunAsync(TestScope scope, TestBlock testBlock)
+  static Task<OatmilkRunSummary> RunAsync(TestScope scope, TestBlock testBlock)
   {
     return new OatmilkTestBlockRunner(scope, testBlock, new DummyMessageBus()).RunAsync();
   }

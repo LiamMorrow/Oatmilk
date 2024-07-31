@@ -16,16 +16,12 @@ internal class OatmilkTestBlockRunner(
 
     var result = new OatmilkRunSummary(Total: 1);
 
-    if (
-      testScope.RootScope.AnyScopesOrTestsAreOnly
-      && !testScope.AnyParentsOrThis(x => x.Metadata.IsOnly)
-      && !testBlock.Metadata.IsOnly
-    )
+    if (testBlock.GetSkipReason(testScope) == SkipReason.OnlyTestsInScopeAndThisIsNotOnly)
     {
       messageBus.OnTestSkipped(testBlock, testScope, "Parent scope has an only block");
       return result with { Skipped = 1 };
     }
-    if (testBlock.ShouldSkipDueToIsSkippedOnThisOrParent(testScope))
+    if (testBlock.GetSkipReason(testScope) == SkipReason.SkippedBySkipMethod)
     {
       messageBus.OnTestSkipped(testBlock, testScope, "Skipped using a Skip method");
       return result with { Skipped = 1 };
