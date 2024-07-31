@@ -4,6 +4,7 @@
       <ImplicitUsings>enable</ImplicitUsings>
       <Nullable>enable</Nullable>
       <Authors>Liam Morrow</Authors>
+      <PackageReadmeFile>README.md</PackageReadmeFile>
       <Title>
         Oatmilk
       </Title>
