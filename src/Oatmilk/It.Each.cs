@@ -3,7 +3,7 @@ using static Oatmilk.TestBuilder;
 
 namespace Oatmilk;
 
-public static partial class It
+public partial class It
 {
   /// <summary>
   /// Creates a suite of tests for every element in the <paramref name="values"/> collection.

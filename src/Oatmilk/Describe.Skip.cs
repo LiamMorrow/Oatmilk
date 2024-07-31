@@ -6,7 +6,7 @@ namespace Oatmilk;
 /// <summary>
 /// Provides methods for creating variations of describe blocks, such as Only, Each, and Skip.
 /// </summary>
-public static partial class Describe
+public partial class Describe
 {
   /// <summary>
   /// Creates a suite of tests that will be skipped.

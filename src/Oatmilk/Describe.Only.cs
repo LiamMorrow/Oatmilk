@@ -3,7 +3,7 @@ using static Oatmilk.TestBuilder;
 
 namespace Oatmilk;
 
-public static partial class Describe
+public partial class Describe
 {
   /// <summary>
   /// Creates a suite of tests that will be run exclusively.

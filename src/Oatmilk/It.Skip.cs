@@ -6,7 +6,7 @@ namespace Oatmilk;
 /// <summary>
 /// Provides methods for creating variations of Tests, such as Only, Each, and Skip.
 /// </summary>
-public static partial class It
+public partial class It
 {
   /// <summary>
   /// Creates a suite of tests that will be skipped for every element in the <paramref name="values"/> collection..
