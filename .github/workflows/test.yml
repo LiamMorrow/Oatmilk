@@ -20,11 +20,14 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.300
-      - name: Run tests
+      - name: Run Xunit tests
         run: dotnet test --collect:"XPlat Code Coverage"
-        working-directory: ./test/Oatmilk.Tests
+        working-directory: ./test/Oatmilk.Tests.Xunit
+      - name: Run Nunit tests
+        run: dotnet test --collect:"XPlat Code Coverage"
+        working-directory: ./test/Oatmilk.Tests.Nunit
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.5.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./test/Oatmilk.Tests/TestResults/**/coverage.cobertura.xml
+          file: ./test/**/TestResults/**/coverage.cobertura.xml

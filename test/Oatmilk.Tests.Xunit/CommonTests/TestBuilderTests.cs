@@ -1,5 +1,4 @@
 using FluentAssertions;
-using Oatmilk;
 
 namespace Oatmilk.Tests;
 
@@ -18,7 +17,8 @@ public class TestBuilderTests
           "Should throw when trying to consume the root scope",
           () =>
           {
-            Assert.Throws<InvalidOperationException>(TestBuilder.ConsumeRootScope);
+            Action act = () => TestBuilder.ConsumeRootScope();
+            act.Should().Throw<InvalidOperationException>();
           }
         );
         It.Each(

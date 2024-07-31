@@ -13,6 +13,8 @@ internal record TestScope(TestScope? Parent, TestMetadata Metadata)
   internal List<TestBlock> TestBlocks { get; } = [];
   internal List<TestScope> Children { get; } = [];
 
+  internal TestScope RootScope => Parent == null ? this : Parent.RootScope;
+
   internal bool HasRunAllTests =>
     TestBlocks.All(x => x.HasRun) && Children.All(x => x.HasRunAllTests);
 
@@ -53,11 +55,11 @@ internal record TestScope(TestScope? Parent, TestMetadata Metadata)
     return false;
   }
 
-  internal IEnumerable<(TestBlock TestBlock, TestScope TestScope)> EnumerateTests()
+  internal IEnumerable<(TestScope TestScope, TestBlock TestBlock)> EnumerateTests()
   {
     foreach (var test in TestBlocks)
     {
-      yield return (test, this);
+      yield return (this, test);
     }
 
     foreach (var child in Children)
@@ -93,20 +95,14 @@ internal record TestBlock(Func<TestInput, Task> Body, TestMetadata Metadata)
 {
   internal bool HasRun { get; set; }
 
-  internal bool ShouldSkipDueToIsSkippedOnThisOrParent(TestScope scope)
-  {
-    if (Metadata.IsSkipped)
-    {
-      return true;
-    }
-
-    if (scope.AnyParentsOrThis(x => x.Metadata.IsSkipped))
-    {
-      return true;
-    }
-
-    return false;
-  }
+  internal SkipReason GetSkipReason(TestScope scope) =>
+    Metadata.IsSkipped || scope.AnyParentsOrThis(x => x.Metadata.IsSkipped)
+      ? SkipReason.SkippedBySkipMethod
+      : scope.AnyParentsOrThis(x => x.AnyScopesOrTestsAreOnly)
+      && !Metadata.IsOnly
+      && !scope.AnyParentsOrThis(x => x.Metadata.IsOnly)
+        ? SkipReason.OnlyTestsInScopeAndThisIsNotOnly
+        : SkipReason.DoNotSkip;
 
   internal string GetDescription(TestScope scope)
   {
@@ -114,10 +110,17 @@ internal record TestBlock(Func<TestInput, Task> Body, TestMetadata Metadata)
     var parent = scope.Parent;
     while (parent != null)
     {
-      sb.Insert(0, parent.Metadata.Description + " ");
+      sb.Insert(0, parent.Metadata.Description + ".");
       parent = parent.Parent;
     }
-    sb.Append(scope.Metadata.Description).Append(' ').Append(Metadata.Description);
+    sb.Append(scope.Metadata.Description).Append('.').Append(Metadata.Description);
     return sb.ToString();
   }
+}
+
+internal enum SkipReason
+{
+  DoNotSkip,
+  SkippedBySkipMethod,
+  OnlyTestsInScopeAndThisIsNotOnly
 }

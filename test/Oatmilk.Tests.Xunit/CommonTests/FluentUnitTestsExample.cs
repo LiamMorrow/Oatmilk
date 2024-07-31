@@ -2,9 +2,6 @@ namespace Oatmilk.Tests;
 
 public class FluentUnitTestsExample
 {
-  [Fact]
-  public void MyXunitNormalTest() { }
-
   [Oatmilk]
   public static void TestScope()
   {
@@ -24,7 +21,7 @@ public class FluentUnitTestsExample
         It("Should pass")
           .When(() =>
           {
-            Assert.True(true);
+            true.Should().BeTrue();
           });
 
         Describe("Nested")
@@ -33,7 +30,7 @@ public class FluentUnitTestsExample
             It("Should pass")
               .When(() =>
               {
-                Assert.True(true);
+                true.Should().BeTrue();
               });
           });
       });

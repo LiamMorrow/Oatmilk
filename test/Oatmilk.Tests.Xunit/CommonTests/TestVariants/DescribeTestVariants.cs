@@ -8,14 +8,14 @@ public class DescribeTestVariants
   [Describe("A test suite of many of the Describe variants")]
   public void MainDescribeVariants()
   {
-    It("should pass", () => Assert.True(true));
+    It("should pass", () => true.Should().BeTrue());
 
     Describe.Each(
       [1, 2, 3],
       "with a nested block at index {0}",
       (i) =>
       {
-        It("should pass for index " + i, () => Assert.True(true));
+        It("should pass for index " + i, () => true.Should().BeTrue());
       }
     );
 
@@ -24,7 +24,7 @@ public class DescribeTestVariants
       s => $"with a nested block for string {s}",
       s =>
       {
-        It($"should pass for string {s}", () => Assert.True(true));
+        It($"should pass for string {s}", () => true.Should().BeTrue());
       }
     );
 
@@ -32,13 +32,13 @@ public class DescribeTestVariants
       "a skipped suite",
       () =>
       {
-        It("should be skipped", () => Assert.True(false));
+        It("should be skipped", () => true.Should().BeFalse());
 
         Describe(
           "a nested skipped suite",
           () =>
           {
-            It("should be skipped", () => Assert.True(false));
+            It("should be skipped", () => true.Should().BeFalse());
           }
         );
       }
@@ -48,13 +48,13 @@ public class DescribeTestVariants
       "a skipped suite with variants {0}",
       (i) =>
       {
-        It("should be skipped", () => Assert.True(false));
+        It("should be skipped", () => true.Should().BeFalse());
 
         Describe(
           "a nested skipped suite",
           () =>
           {
-            It("should be skipped", () => Assert.True(false));
+            It("should be skipped", () => true.Should().BeFalse());
           }
         );
       }
@@ -64,13 +64,13 @@ public class DescribeTestVariants
       x => $"a skipped suite with variants {x}",
       (i) =>
       {
-        It("should be skipped", () => Assert.True(false));
+        It("should be skipped", () => true.Should().BeFalse());
 
         Describe(
           "a nested skipped suite",
           () =>
           {
-            It("should be skipped", () => Assert.True(false));
+            It("should be skipped", () => true.Should().BeFalse());
           }
         );
       }
@@ -121,7 +121,7 @@ public class DescribeTestVariants
       "Here we have a top level only",
       () =>
       {
-        It("should pass", () => Assert.True(true));
+        It("should pass", () => true.Should().BeTrue());
       }
     );
 
@@ -130,7 +130,7 @@ public class DescribeTestVariants
       "This is an each using the only method {0}",
       (i) =>
       {
-        It("should pass", () => Assert.True(true));
+        It("should pass", () => true.Should().BeTrue());
       }
     );
 
@@ -139,7 +139,7 @@ public class DescribeTestVariants
       x => $"This is an each using the only method {x}",
       (i) =>
       {
-        It("should pass", () => Assert.True(true));
+        It("should pass", () => true.Should().BeTrue());
       }
     );
 
@@ -147,7 +147,7 @@ public class DescribeTestVariants
       "This one does not have an only, so tests inside should be skipped",
       () =>
       {
-        It("should be skipped", () => Assert.True(false));
+        It("should be skipped", () => true.Should().BeFalse());
       }
     );
   }
@@ -162,9 +162,7 @@ public class DescribeTestVariants
     {
       TestBuilder.Describe("A root node", testMethod);
       rootScope = TestBuilder.ConsumeRootScope();
-      discoveredTests = OatmilkDiscoverer
-        .TraverseScopesAndYieldTestBlocks(rootScope, false)
-        .ToList();
+      discoveredTests = rootScope.EnumerateTests().ToList();
     }
 
     Describe(
@@ -189,7 +187,7 @@ public class DescribeTestVariants
           () =>
           {
             discoveredTests
-              .Count(x => x.TestBlock.ShouldSkipDueToIsSkippedOnThisOrParent(x.TestScope))
+              .Count(x => x.TestBlock.GetSkipReason(x.TestScope) != SkipReason.DoNotSkip)
               .Should()
               .Be(14);
 
@@ -211,8 +209,8 @@ public class DescribeTestVariants
                 messageBus
               );
 
-              var result = await testRunner.RunAsync(false);
-              if (test.TestBlock.ShouldSkipDueToIsSkippedOnThisOrParent(test.TestScope))
+              var result = await testRunner.RunAsync();
+              if (test.TestBlock.GetSkipReason(test.TestScope) != SkipReason.DoNotSkip)
               {
                 result.Skipped.Should().Be(1);
               }
@@ -250,7 +248,7 @@ public class DescribeTestVariants
           () =>
           {
             discoveredTests
-              .Count(x => x.TestBlock.ShouldSkipDueToIsSkippedOnThisOrParent(x.TestScope))
+              .Count(x => x.TestBlock.GetSkipReason(x.TestScope) == SkipReason.SkippedBySkipMethod)
               .Should()
               .Be(0);
 
@@ -298,7 +296,7 @@ public class DescribeTestVariants
               new DummyMessageBus()
             );
 
-            var result = testRunner.RunAsync(false).Result;
+            var result = testRunner.RunAsync().Result;
             result.Passed.Should().Be(1);
             result.Failed.Should().Be(0);
             result.Skipped.Should().Be(0);
@@ -318,7 +316,7 @@ public class DescribeTestVariants
               new DummyMessageBus()
             );
 
-            var result = testRunner.RunAsync(false).Result;
+            var result = testRunner.RunAsync().Result;
             result.Passed.Should().Be(0);
             result.Failed.Should().Be(1);
             result.Skipped.Should().Be(0);

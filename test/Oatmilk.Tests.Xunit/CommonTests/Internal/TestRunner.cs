@@ -16,9 +16,7 @@ public class TestRunnerTests
     {
       TestBuilder.Describe("A root node", testMethod);
       rootScope = TestBuilder.ConsumeRootScope();
-      discoveredTests = OatmilkDiscoverer
-        .TraverseScopesAndYieldTestBlocks(rootScope, false)
-        .ToList();
+      discoveredTests = rootScope.EnumerateTests().ToList();
     }
 
     Describe(
@@ -71,7 +69,7 @@ public class TestRunnerTests
                 messageBus
               );
 
-              var result = await testRunner.RunAsync(false);
+              var result = await testRunner.RunAsync();
             }
 
             lifetimeMethods

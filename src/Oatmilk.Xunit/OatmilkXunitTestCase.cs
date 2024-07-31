@@ -8,29 +8,26 @@ namespace Oatmilk.Xunit;
 internal partial class OatmilkXunitTestCase(
   TestScope testScope,
   TestBlock testBlock,
-  ITestMethod callingMethod,
-  bool AnyOnlyTestsInEntireScope
+  ITestMethod callingMethod
 ) : IXunitTestCase
 {
   [Obsolete("Here for serializable")]
   public OatmilkXunitTestCase()
-    : this(null!, null!, null!, false) { }
+    : this(null!, null!, null!) { }
 
   public Exception? InitializationException { get; }
   public IMethodInfo Method => TestMethod.Method;
   public int Timeout => (int)TestBlock.Metadata.Timeout.TotalSeconds;
   public string DisplayName => TestBlock.GetDescription(TestScope);
 
-  private bool SkippingDueToParentScopeOnly =>
-    AnyOnlyTestsInEntireScope
-    && !TestBlock.Metadata.IsOnly
-    && !TestScope.AnyParentsOrThis(x => x.Metadata.IsOnly);
   public string? SkipReason =>
-    TestBlock.ShouldSkipDueToIsSkippedOnThisOrParent(TestScope)
-      ? "Used a Skip method"
-      : SkippingDueToParentScopeOnly
-        ? "Only tests are present in this scope"
-        : null;
+    TestBlock.GetSkipReason(TestScope) switch
+    {
+      Oatmilk.SkipReason.SkippedBySkipMethod => "Used a Skip method",
+      Oatmilk.SkipReason.OnlyTestsInScopeAndThisIsNotOnly => "Only tests are present in this scope",
+      _ => null,
+    };
+
   public ISourceInformation? SourceInformation
   {
     get
@@ -47,6 +44,7 @@ internal partial class OatmilkXunitTestCase(
   public TestBlock TestBlock { get; set; } = testBlock;
   public ITestMethod TestMethod { get; set; } = callingMethod;
   public object[] TestMethodArguments { get; set; } = [];
+
   public Dictionary<string, List<string>> Traits
   {
     get =>
@@ -76,9 +74,11 @@ internal partial class OatmilkXunitTestCase(
   )
   {
     var oatmilkMessageBus = new XunitOatmilkMessageBus(messageBus, this);
-    var result = await new OatmilkTestBlockRunner(TestScope, TestBlock, oatmilkMessageBus).RunAsync(
-      SkippingDueToParentScopeOnly
-    );
+    var result = await new OatmilkTestBlockRunner(
+      TestScope,
+      TestBlock,
+      oatmilkMessageBus
+    ).RunAsync();
 
     return new RunSummary
     {
@@ -130,14 +130,12 @@ internal partial class OatmilkXunitTestCase(
 
     var rootScope = TestBuilder.ConsumeRootScope();
 
-    AnyOnlyTestsInEntireScope = rootScope.AnyScopesOrTestsAreOnly;
-
     var filePath = data.GetValue<string>("TestBlock.FilePath");
     var lineNumber = data.GetValue<int>("TestBlock.LineNumber");
     var ScopeIndex = data.GetValue<int>("TestBlock.ScopeIndex");
     var description = data.GetValue<string>("TestBlock.Description");
 
-    (TestBlock, TestScope) = rootScope
+    (TestScope, TestBlock) = rootScope
       .EnumerateTests()
       .Single(t =>
         t.TestBlock.Metadata.FilePath == filePath

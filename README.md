@@ -1,5 +1,6 @@
 <p align="center"><a href="https://www.nuget.org/packages/Oatmilk/"><img src="https://img.shields.io/nuget/v/Oatmilk?style=flat&label=Oatmilk" alt="NuGet Version"></a>
 <a href="https://www.nuget.org/packages/Oatmilk.Xunit/"><img alt="NuGet Version" src="https://img.shields.io/nuget/v/Oatmilk.Xunit?style=flat&label=Oatmilk.Xunit"></a>
+<a href="https://www.nuget.org/packages/Oatmilk.Nunit/"><img alt="NuGet Version" src="https://img.shields.io/nuget/v/Oatmilk.Nunit?style=flat&label=Oatmilk.Nunit"></a>
 <a href="https://opensource.org/licenses/MIT" rel="nofollow"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
 <a href="https://discord.gg/QbmMq6snYg"><img src="https://img.shields.io/discord/1267395588513726605?logo=discord" alt="Discord"/>
 </p>
@@ -22,18 +23,13 @@ Note that Oatmilk does not intend to be a full test framework, as such, things l
 
 ## Getting Started
 
-First in your test project, install the appropriate Oatmilk package. Currently only Xunit is supported, however Nunit and MSTest are on the roadmap.
+First in your test project, install the appropriate Oatmilk package. Currently only Xunit and Nunit are supported, MSTest is on the roadmap.
 
 #### Dotnet CLI
 
 ```bash
 dotnet add package Oatmilk.Xunit
-```
-
-#### Package Manager Console
-
-```bash
-Install-Package Oatmilk.Xunit
+# OR dotnet add package Oatmilk.Nunit
 ```
 
 Then create a test class, and create your first `Oatmilk Test` by using the `Describe` attribute on a method. Be sure to include a static import of `Oatmilk.TestBuilder`.
@@ -51,6 +47,12 @@ public class MyTestClass
         It("Should pass", () => Assert.True(true));
 
         It("Is another test, wow!", () => Assert.Equal(1, 1));
+    }
+
+    [Fact]
+    public void ExistingXunitTest()
+    {
+        // You don't need to throw away your existing tests - they can live alongside Oatmilk tests :)
     }
 }
 
@@ -224,4 +226,4 @@ Describe("My test suite")
 
 ### Examples
 
-See the [Oatmilk.Tests package](./Oatmilk.Tests/) for examples of how tests can be written. All tests for Oatmilk are written in it!
+See the [Oatmilk.Tests packages](./test/) for examples of how tests can be written. All tests for Oatmilk are written in it!

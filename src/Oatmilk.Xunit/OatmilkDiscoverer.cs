@@ -29,37 +29,11 @@ internal class OatmilkDiscoverer : IXunitTestCaseDiscoverer
 {
   internal static IEnumerable<OatmilkXunitTestCase> TraverseScopesAndYieldTestCases(
     TestScope testScope,
-    ITestMethod callingMethod,
-    bool anyOnlyTestsInEntireScope
+    ITestMethod callingMethod
   ) =>
-    TraverseScopesAndYieldTestBlocks(testScope, anyOnlyTestsInEntireScope)
-      .Select(x => new OatmilkXunitTestCase(
-        x.TestScope,
-        x.TestBlock,
-        callingMethod,
-        anyOnlyTestsInEntireScope
-      ));
-
-  internal static IEnumerable<(
-    TestScope TestScope,
-    TestBlock TestBlock
-  )> TraverseScopesAndYieldTestBlocks(TestScope testScope, bool anyOnlyTestsInEntireScope)
-  {
-    foreach (var testBlock in testScope.TestBlocks)
-    {
-      yield return (testScope, testBlock);
-    }
-
-    foreach (var childScope in testScope.Children)
-    {
-      foreach (
-        var testBlock in TraverseScopesAndYieldTestBlocks(childScope, anyOnlyTestsInEntireScope)
-      )
-      {
-        yield return testBlock;
-      }
-    }
-  }
+    testScope
+      .EnumerateTests()
+      .Select(x => new OatmilkXunitTestCase(x.TestScope, x.TestBlock, callingMethod));
 
   protected virtual TestScope GetRootScope(ITestMethod tm, IAttributeInfo attribute)
   {
@@ -75,6 +49,6 @@ internal class OatmilkDiscoverer : IXunitTestCaseDiscoverer
   )
   {
     var rootScope = GetRootScope(tm, factAttribute);
-    return TraverseScopesAndYieldTestCases(rootScope, tm, rootScope.AnyScopesOrTestsAreOnly);
+    return TraverseScopesAndYieldTestCases(rootScope, tm);
   }
 }
