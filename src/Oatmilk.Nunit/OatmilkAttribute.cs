@@ -10,7 +10,6 @@ namespace Oatmilk.Nunit;
 /// Marks a test method as a method containing Oatmilk tests described with the various
 /// <see cref="TestBuilder"/> methods. Implicitly begins a describe block.
 /// </summary>
-/// <param name="Description">The description of the test suite.</param>
 /// <param name="FileName">The file path of the file containing the test suite.</param>
 /// <param name="LineNumber">The line number of the test suite.</param>
 ///
@@ -24,18 +23,11 @@ namespace Oatmilk.Nunit;
 /// </code>
 /// </example>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-public sealed class DescribeAttribute(
-  string Description,
+public sealed class OatmilkAttribute(
   [CallerFilePath] string FileName = "",
   [CallerLineNumber] int LineNumber = 0
 ) : TheoryAttribute, ITestBuilder
 {
-  /// <summary>
-  /// The description of the test suite.
-  /// This is passed to the <see cref="TestBuilder.Describe(string, Action, TestOptions, int,string)"/> method.
-  /// </summary>
-  public string Description { get; } = Description;
-
   /// <summary>
   /// The file path of the file containing the test suite.
   /// </summary>
@@ -49,13 +41,7 @@ public sealed class DescribeAttribute(
   IEnumerable<TestMethod> ITestBuilder.BuildFrom(IMethodInfo method, Test? suite)
   {
     var instance = Activator.CreateInstance(method.TypeInfo.Type);
-    TestBuilder.Describe(
-      Description,
-      () =>
-      {
-        method.Invoke(instance, null);
-      }
-    );
+    method.Invoke(instance, null);
     var rootScope = TestBuilder.ConsumeRootScope();
     foreach (var test in rootScope.EnumerateTests())
     {

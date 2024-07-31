@@ -116,10 +116,10 @@ internal record TestBlock(Func<TestInput, Task> Body, TestMetadata Metadata)
     var parent = scope.Parent;
     while (parent != null)
     {
-      sb.Insert(0, parent.Metadata.Description + " ");
+      sb.Insert(0, parent.Metadata.Description + ".");
       parent = parent.Parent;
     }
-    sb.Append(scope.Metadata.Description).Append(' ').Append(Metadata.Description);
+    sb.Append(scope.Metadata.Description).Append('.').Append(Metadata.Description);
     return sb.ToString();
   }
 }

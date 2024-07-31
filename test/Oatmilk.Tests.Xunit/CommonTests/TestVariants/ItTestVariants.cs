@@ -8,24 +8,28 @@ public class ItTestVariants
   [Describe("A test suite of many of the It variants")]
   public void MainDescribeVariants()
   {
-    It("should pass", () => Assert.True(true));
+    It("should pass", () => true.Should().BeTrue());
 
-    It.Each([1, 2, 3], "with an each at index {0}", (i) => Assert.True(true));
+    It.Each([1, 2, 3], "with an each at index {0}", (i) => true.Should().BeTrue());
 
-    It.Each(["a", "b", "c"], s => $"with an each block for string {s}", s => Assert.True(true));
+    It.Each(
+      ["a", "b", "c"],
+      s => $"with an each block for string {s}",
+      s => true.Should().BeTrue()
+    );
 
-    It.Skip("a skipped test should skip", () => Assert.True(false));
+    It.Skip("a skipped test should skip", () => true.Should().BeFalse());
 
     It.Skip(
       [1, 2, 3],
       "a skipped test with variants and string format name {0}",
-      (i) => Assert.True(false)
+      (i) => true.Should().BeFalse()
     );
 
     It.Skip(
       [1, 2, 3],
       x => $"a skipped suite with variants and functioned name {x}",
-      (i) => Assert.True(false)
+      (i) => true.Should().BeFalse()
     );
   }
 
@@ -33,13 +37,17 @@ public class ItTestVariants
   public void DescribeOnlyVariants()
   {
     // Note that any it with an only will be run, not just the first
-    It.Only("Here we have a top level only", () => Assert.True(true));
+    It.Only("Here we have a top level only", () => true.Should().BeTrue());
 
-    It.Only([1, 2, 4], "This is an each using the only method {0}", (i) => Assert.True(true));
+    It.Only([1, 2, 4], "This is an each using the only method {0}", (i) => true.Should().BeTrue());
 
-    It.Only([1, 2, 4], x => $"This is an each using the only method {x}", (i) => Assert.True(true));
+    It.Only(
+      [1, 2, 4],
+      x => $"This is an each using the only method {x}",
+      (i) => true.Should().BeTrue()
+    );
 
-    It("This one does not have an only, so should be skipped", () => Assert.True(false));
+    It("This one does not have an only, so should be skipped", () => true.Should().BeFalse());
   }
 
   [Describe("OatmilkDiscoverer tests enumeration of Its")]
@@ -96,7 +104,7 @@ public class ItTestVariants
                 messageBus
               );
 
-              var result = await testRunner.RunAsync(false);
+              var result = await testRunner.RunAsync();
               if (test.TestBlock.ShouldSkipDueToIsSkippedOnThisOrParent(test.TestScope))
               {
                 result.Skipped.Should().Be(1);
@@ -163,7 +171,7 @@ public class ItTestVariants
                   () => Task.Delay(TimeSpan.FromMilliseconds(200))
                 );
 
-                It("should pass", () => Assert.True(true));
+                It("should pass", () => true.Should().BeTrue());
               },
               new(Timeout: TimeSpan.FromMilliseconds(100))
             );
@@ -183,7 +191,7 @@ public class ItTestVariants
               new DummyMessageBus()
             );
 
-            var result = testRunner.RunAsync(false).Result;
+            var result = testRunner.RunAsync().Result;
             result.Passed.Should().Be(1);
             result.Failed.Should().Be(0);
             result.Skipped.Should().Be(0);
@@ -203,7 +211,7 @@ public class ItTestVariants
               new DummyMessageBus()
             );
 
-            var result = testRunner.RunAsync(false).Result;
+            var result = testRunner.RunAsync().Result;
             result.Passed.Should().Be(0);
             result.Failed.Should().Be(1);
             result.Skipped.Should().Be(0);

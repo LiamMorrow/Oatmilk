@@ -1,0 +1,7 @@
+<Project>
+  <ItemGroup>
+    <Using Include="Oatmilk" />
+    <Using Include="FluentAssertions" />
+    <Using Include="Oatmilk.TestBuilder" Static="true" />
+  </ItemGroup>
+</Project>

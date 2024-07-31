@@ -17,7 +17,7 @@ public class DescribeAttributeUnitTestsExample
     It("Should pass")
       .When(() =>
       {
-        Assert.True(true);
+        true.Should().BeTrue();
       });
 
     Describe("Nested")
@@ -26,7 +26,7 @@ public class DescribeAttributeUnitTestsExample
         It("Should pass")
           .When(() =>
           {
-            Assert.True(true);
+            true.Should().BeTrue();
           });
       });
   }

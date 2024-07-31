@@ -1,5 +1,3 @@
-using Xunit.Abstractions;
-
 namespace Oatmilk.Tests;
 
 public class MultiArgUnitTestsExample
@@ -25,7 +23,7 @@ public class MultiArgUnitTestsExample
           async () =>
           {
             await Task.Delay(TimeSpan.FromMilliseconds(20));
-            Assert.True(true);
+            true.Should().BeTrue();
           },
           new(Timeout: TimeSpan.FromMilliseconds(100))
         );
@@ -47,7 +45,7 @@ public class MultiArgUnitTestsExample
           (i) => $"Should skip for {i:x}",
           (i) =>
           {
-            Assert.True(false);
+            true.Should().BeFalse();
           }
         );
 
@@ -55,7 +53,7 @@ public class MultiArgUnitTestsExample
           "Should skip this test",
           () =>
           {
-            Assert.True(false);
+            true.Should().BeFalse();
           }
         );
       }

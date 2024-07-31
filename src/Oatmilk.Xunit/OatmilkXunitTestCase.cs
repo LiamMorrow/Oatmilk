@@ -75,9 +75,11 @@ internal partial class OatmilkXunitTestCase(
   )
   {
     var oatmilkMessageBus = new XunitOatmilkMessageBus(messageBus, this);
-    var result = await new OatmilkTestBlockRunner(TestScope, TestBlock, oatmilkMessageBus).RunAsync(
-      SkippingDueToParentScopeOnly
-    );
+    var result = await new OatmilkTestBlockRunner(
+      TestScope,
+      TestBlock,
+      oatmilkMessageBus
+    ).RunAsync();
 
     return new RunSummary
     {

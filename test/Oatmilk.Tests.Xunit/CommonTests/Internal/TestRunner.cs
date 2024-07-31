@@ -69,7 +69,7 @@ public class TestRunnerTests
                 messageBus
               );
 
-              var result = await testRunner.RunAsync(false);
+              var result = await testRunner.RunAsync();
             }
 
             lifetimeMethods
