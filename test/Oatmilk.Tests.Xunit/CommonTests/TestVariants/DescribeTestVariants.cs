@@ -1,8 +1,10 @@
-using FluentAssertions;
 using Oatmilk.Internal;
 
 namespace Oatmilk.Tests.TestVariants;
 
+#if MSTEST
+[TestClass]
+#endif
 public class DescribeTestVariants
 {
   [Describe("A test suite of many of the Describe variants")]
@@ -81,31 +83,35 @@ public class DescribeTestVariants
       () =>
       {
 #pragma warning disable CS0618
-        Assert.Throws<InvalidOperationException>(
-          () => Describe("A test suite", async () => await Task.CompletedTask)
-        );
-        Assert.Throws<InvalidOperationException>(
+        static void AssertThrows(Action action)
+        {
+#if NUNIT
+          // No clue why, but for some reason Nunit doesn't register the test if it uses FA throws
+          Assert.Throws<InvalidOperationException>(() => action());
+#else
+          action.Should().Throw<InvalidOperationException>();
+#endif
+        }
+
+        AssertThrows(() => Describe("A test suite", async () => await Task.CompletedTask));
+        AssertThrows(
           () => Describe.Each([1], "A test suite", async (a) => await Task.CompletedTask)
         );
-        Assert.Throws<InvalidOperationException>(
+        AssertThrows(
           () => Describe.Each([1], a => "A test suite" + a, async (a) => await Task.CompletedTask)
         );
-        Assert.Throws<InvalidOperationException>(
-          () => Describe.Skip("A test suite", async () => await Task.CompletedTask)
-        );
-        Assert.Throws<InvalidOperationException>(
+        AssertThrows(() => Describe.Skip("A test suite", async () => await Task.CompletedTask));
+        AssertThrows(
           () => Describe.Skip([1], "A test suite", async (a) => await Task.CompletedTask)
         );
-        Assert.Throws<InvalidOperationException>(
+        AssertThrows(
           () => Describe.Skip([1], x => $"A test suite {x}", async (a) => await Task.CompletedTask)
         );
-        Assert.Throws<InvalidOperationException>(
-          () => Describe.Only("A test suite", async () => await Task.CompletedTask)
-        );
-        Assert.Throws<InvalidOperationException>(
+        AssertThrows(() => Describe.Only("A test suite", async () => await Task.CompletedTask));
+        AssertThrows(
           () => Describe.Only([1], "A test suite", async (a) => await Task.CompletedTask)
         );
-        Assert.Throws<InvalidOperationException>(
+        AssertThrows(
           () => Describe.Only([1], x => $"A test suite {x}", async (a) => await Task.CompletedTask)
         );
 #pragma warning restore CS0618

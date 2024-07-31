@@ -1,9 +1,12 @@
 namespace Oatmilk.Tests;
 
+#if MSTEST
+[TestClass]
+#endif
 public class MultiArgUnitTestsExample
 {
   [Oatmilk]
-  public static void TestScope() =>
+  public void TestScope() =>
     Describe(
       "My tests using the multi arg syntax",
       () =>

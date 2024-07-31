@@ -1,9 +1,12 @@
 namespace Oatmilk.Tests;
 
+#if MSTEST
+[TestClass]
+#endif
 public class FluentUnitTestsExample
 {
   [Oatmilk]
-  public static void TestScope()
+  public void TestScope()
   {
     Describe("My tests using the fluent syntax")
       .As(() =>

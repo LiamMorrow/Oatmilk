@@ -17,6 +17,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{95414C3D-F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oatmilk.Tests.Nunit", "test\Oatmilk.Tests.Nunit\Oatmilk.Tests.Nunit.csproj", "{9FF507CB-F49D-40CD-9767-25F59451D4CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oatmilk.Tests.MSTest", "test\Oatmilk.Tests.MSTest\Oatmilk.Tests.MSTest.csproj", "{32B47204-D5A3-4AA4-A8DF-266F47FF03A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oatmilk.MSTest", "src\Oatmilk.MSTest\Oatmilk.MSTest.csproj", "{D9EF1820-1A12-46C6-8FF2-F4A0576C4704}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +47,14 @@ Global
 		{9FF507CB-F49D-40CD-9767-25F59451D4CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9FF507CB-F49D-40CD-9767-25F59451D4CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9FF507CB-F49D-40CD-9767-25F59451D4CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32B47204-D5A3-4AA4-A8DF-266F47FF03A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32B47204-D5A3-4AA4-A8DF-266F47FF03A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32B47204-D5A3-4AA4-A8DF-266F47FF03A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32B47204-D5A3-4AA4-A8DF-266F47FF03A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9EF1820-1A12-46C6-8FF2-F4A0576C4704}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9EF1820-1A12-46C6-8FF2-F4A0576C4704}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9EF1820-1A12-46C6-8FF2-F4A0576C4704}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9EF1820-1A12-46C6-8FF2-F4A0576C4704}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,5 +65,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{518AEBDB-811D-4094-99C2-9B16F840C5F4} = {0355805D-9BE0-4CD0-ACD8-64DCCE3B69F8}
 		{9FF507CB-F49D-40CD-9767-25F59451D4CD} = {95414C3D-F60E-4088-B0FA-ED2E080493E5}
+		{32B47204-D5A3-4AA4-A8DF-266F47FF03A8} = {95414C3D-F60E-4088-B0FA-ED2E080493E5}
+		{D9EF1820-1A12-46C6-8FF2-F4A0576C4704} = {0355805D-9BE0-4CD0-ACD8-64DCCE3B69F8}
 	EndGlobalSection
 EndGlobal

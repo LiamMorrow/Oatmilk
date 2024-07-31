@@ -37,8 +37,9 @@ internal class OatmilkTestBlockRunner(
     messageBus.OnTestStarting(testBlock, testScope);
     var finishedTestContext = new FinishedTestContext(
       true,
-      testOutputSink.GetOutput(),
-      testBlock.Metadata.Description
+      new TestOutput([]),
+      testBlock.Metadata.Description,
+      null
     );
     try
     {
@@ -57,7 +58,7 @@ internal class OatmilkTestBlockRunner(
     }
     catch (Exception ex)
     {
-      result = result with { Time = sw.Elapsed, Failed = 1 };
+      result = result with { Time = sw.Elapsed, Failed = 1, Exception = ex };
       messageBus.OnTestFailed(
         testBlock,
         testScope,
@@ -65,14 +66,20 @@ internal class OatmilkTestBlockRunner(
         result.Time,
         testOutputSink.GetOutput().Output
       );
-      finishedTestContext = finishedTestContext with { Passed = false };
+      finishedTestContext = finishedTestContext with { Passed = false, Exception = ex };
     }
 
     messageBus.OnTestFinished(testBlock, testScope, result.Time, testOutputSink.GetOutput().Output);
     testBlock.HasRun = true;
 
     messageBus.OnAfterTestSetupStarting(testBlock, testScope);
-    await RunAfterEachesIncludingParentsAsync(finishedTestContext, testScope);
+    await RunAfterEachesIncludingParentsAsync(
+      finishedTestContext with
+      {
+        TestOutput = testOutputSink.GetOutput(),
+      },
+      testScope
+    );
     await RunAfterAllsIncludingParentsAsync(testScope);
     messageBus.OnAfterTestSetupFinished(testBlock, testScope);
 

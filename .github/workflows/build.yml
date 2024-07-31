@@ -27,3 +27,6 @@ jobs:
       - name: Build Nunit
         run: dotnet build --configuration Release
         working-directory: ./src/Oatmilk.Nunit
+      - name: Build MSTest
+        run: dotnet build --configuration Release
+        working-directory: ./src/Oatmilk.MSTest

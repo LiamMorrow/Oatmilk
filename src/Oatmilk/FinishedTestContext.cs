@@ -7,7 +7,13 @@ namespace Oatmilk;
 /// <param name="Passed">True if the test passed.</param>
 /// <param name="TestOutput">The output of the test.</param>
 /// <param name="TestName">The name of the test.</param>
-public record FinishedTestContext(bool Passed, TestOutput TestOutput, string TestName);
+/// <param name="Exception">The exception that was thrown if the test failed</param>
+public record FinishedTestContext(
+  bool Passed,
+  TestOutput TestOutput,
+  string TestName,
+  Exception? Exception
+);
 
 /// <summary>
 /// Represents the output of a test.

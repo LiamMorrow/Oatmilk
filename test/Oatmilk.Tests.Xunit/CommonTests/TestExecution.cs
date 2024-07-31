@@ -1,7 +1,8 @@
-using FluentAssertions;
-
 namespace Oatmilk.Tests;
 
+#if MSTEST
+[TestClass]
+#endif
 public class TestExecution
 {
   [Describe("TestExecution")]
