@@ -9,6 +9,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oatmilk.Tests", "test\Oatmi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oatmilk.Xunit", "src\Oatmilk.Xunit\Oatmilk.Xunit.csproj", "{5E7744C1-5102-495E-AF84-E0FB670EAF1C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0355805D-9BE0-4CD0-ACD8-64DCCE3B69F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oatmilk.Nunit", "src\Oatmilk.Nunit\Oatmilk.Nunit.csproj", "{518AEBDB-811D-4094-99C2-9B16F840C5F4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{95414C3D-F60E-4088-B0FA-ED2E080493E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oatmilk.TestsNunit", "test\Oatmilk.TestsNunit\Oatmilk.TestsNunit.csproj", "{9FF507CB-F49D-40CD-9767-25F59451D4CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,11 +35,23 @@ Global
 		{5E7744C1-5102-495E-AF84-E0FB670EAF1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E7744C1-5102-495E-AF84-E0FB670EAF1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E7744C1-5102-495E-AF84-E0FB670EAF1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{518AEBDB-811D-4094-99C2-9B16F840C5F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{518AEBDB-811D-4094-99C2-9B16F840C5F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{518AEBDB-811D-4094-99C2-9B16F840C5F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{518AEBDB-811D-4094-99C2-9B16F840C5F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FF507CB-F49D-40CD-9767-25F59451D4CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FF507CB-F49D-40CD-9767-25F59451D4CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FF507CB-F49D-40CD-9767-25F59451D4CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FF507CB-F49D-40CD-9767-25F59451D4CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EBD30406-5793-4426-83AE-172C9B613F8D}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{518AEBDB-811D-4094-99C2-9B16F840C5F4} = {0355805D-9BE0-4CD0-ACD8-64DCCE3B69F8}
+		{9FF507CB-F49D-40CD-9767-25F59451D4CD} = {95414C3D-F60E-4088-B0FA-ED2E080493E5}
 	EndGlobalSection
 EndGlobal

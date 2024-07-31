@@ -8,13 +8,12 @@ namespace Oatmilk.Xunit;
 internal partial class OatmilkXunitTestCase(
   TestScope testScope,
   TestBlock testBlock,
-  ITestMethod callingMethod,
-  bool AnyOnlyTestsInEntireScope
+  ITestMethod callingMethod
 ) : IXunitTestCase
 {
   [Obsolete("Here for serializable")]
   public OatmilkXunitTestCase()
-    : this(null!, null!, null!, false) { }
+    : this(null!, null!, null!) { }
 
   public Exception? InitializationException { get; }
   public IMethodInfo Method => TestMethod.Method;
@@ -22,7 +21,7 @@ internal partial class OatmilkXunitTestCase(
   public string DisplayName => TestBlock.GetDescription(TestScope);
 
   private bool SkippingDueToParentScopeOnly =>
-    AnyOnlyTestsInEntireScope
+    TestScope.RootScope.AnyScopesOrTestsAreOnly
     && !TestBlock.Metadata.IsOnly
     && !TestScope.AnyParentsOrThis(x => x.Metadata.IsOnly);
   public string? SkipReason =>
@@ -130,14 +129,12 @@ internal partial class OatmilkXunitTestCase(
 
     var rootScope = TestBuilder.ConsumeRootScope();
 
-    AnyOnlyTestsInEntireScope = rootScope.AnyScopesOrTestsAreOnly;
-
     var filePath = data.GetValue<string>("TestBlock.FilePath");
     var lineNumber = data.GetValue<int>("TestBlock.LineNumber");
     var ScopeIndex = data.GetValue<int>("TestBlock.ScopeIndex");
     var description = data.GetValue<string>("TestBlock.Description");
 
-    (TestBlock, TestScope) = rootScope
+    (TestScope, TestBlock) = rootScope
       .EnumerateTests()
       .Single(t =>
         t.TestBlock.Metadata.FilePath == filePath

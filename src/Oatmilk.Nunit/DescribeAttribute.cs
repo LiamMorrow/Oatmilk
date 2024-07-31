@@ -1,8 +1,10 @@
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using Xunit.Abstractions;
-using Xunit.Sdk;
+using NUnit.Framework;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
-namespace Oatmilk.Xunit;
+namespace Oatmilk.Nunit;
 
 /// <summary>
 /// Marks a test method as a method containing Oatmilk tests described with the various
@@ -22,12 +24,11 @@ namespace Oatmilk.Xunit;
 /// </code>
 /// </example>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-[XunitTestCaseDiscoverer("Oatmilk.Xunit.DescribeDiscoverer", "Oatmilk.Xunit")]
 public sealed class DescribeAttribute(
   string Description,
   [CallerFilePath] string FileName = "",
   [CallerLineNumber] int LineNumber = 0
-) : FactAttribute
+) : TheoryAttribute, ITestBuilder
 {
   /// <summary>
   /// The description of the test suite.
@@ -45,23 +46,17 @@ public sealed class DescribeAttribute(
   /// </summary>
   public int LineNumber { get; } = LineNumber;
 
-  /// <inheritdoc/>
-  public override int Timeout { get; set; } = (int)TestBuilder.DefaultTimeout.TotalSeconds;
-}
-
-internal class DescribeDiscoverer : OatmilkDiscoverer
-{
-  protected override TestScope GetRootScope(ITestMethod tm, IAttributeInfo attribute)
+  IEnumerable<TestMethod> ITestBuilder.BuildFrom(IMethodInfo method, Test? suite)
   {
-    var instance = Activator.CreateInstance(tm.TestClass.Class.ToRuntimeType());
-    var timeoutSeconds = attribute.GetNamedArgument<int>(nameof(DescribeAttribute.Timeout));
+    var instance = Activator.CreateInstance(method.TypeInfo.Type);
     TestBuilder.Describe(
-      attribute.GetNamedArgument<string>("Description"),
-      () => tm.Method.ToRuntimeMethod().Invoke(instance, null),
-      new TestOptions(TimeSpan.FromSeconds(timeoutSeconds)),
-      attribute.GetNamedArgument<int>(nameof(DescribeAttribute.LineNumber)),
-      attribute.GetNamedArgument<string>(nameof(DescribeAttribute.FileName))
+      Description,
+      () =>
+      {
+        method.Invoke(instance, null);
+      }
     );
-    return TestBuilder.ConsumeRootScope();
+    var rootScope = TestBuilder.ConsumeRootScope();
+    return [new OatmilkNunitTestScopeTest(rootScope)];
   }
 }

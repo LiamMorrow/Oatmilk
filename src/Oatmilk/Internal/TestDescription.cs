@@ -13,6 +13,8 @@ internal record TestScope(TestScope? Parent, TestMetadata Metadata)
   internal List<TestBlock> TestBlocks { get; } = [];
   internal List<TestScope> Children { get; } = [];
 
+  internal TestScope RootScope => Parent == null ? this : Parent.RootScope;
+
   internal bool HasRunAllTests =>
     TestBlocks.All(x => x.HasRun) && Children.All(x => x.HasRunAllTests);
 
@@ -53,11 +55,11 @@ internal record TestScope(TestScope? Parent, TestMetadata Metadata)
     return false;
   }
 
-  internal IEnumerable<(TestBlock TestBlock, TestScope TestScope)> EnumerateTests()
+  internal IEnumerable<(TestScope TestScope, TestBlock TestBlock)> EnumerateTests()
   {
     foreach (var test in TestBlocks)
     {
-      yield return (test, this);
+      yield return (this, test);
     }
 
     foreach (var child in Children)

@@ -162,9 +162,7 @@ public class DescribeTestVariants
     {
       TestBuilder.Describe("A root node", testMethod);
       rootScope = TestBuilder.ConsumeRootScope();
-      discoveredTests = OatmilkDiscoverer
-        .TraverseScopesAndYieldTestBlocks(rootScope, false)
-        .ToList();
+      discoveredTests = rootScope.EnumerateTests().ToList();
     }
 
     Describe(

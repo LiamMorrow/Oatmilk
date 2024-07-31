@@ -9,6 +9,8 @@
   <ItemGroup>
     <InternalsVisibleTo Include="$(AssemblyName).Tests" />
     <InternalsVisibleTo Include="$(AssemblyName).Xunit" />
+    <InternalsVisibleTo Include="$(AssemblyName).Nunit" />
+    <InternalsVisibleTo Include="$(AssemblyName).MsTest" />
   </ItemGroup>
 
 
