@@ -17,27 +17,29 @@
 
 Oatmilk is a testing library for .NET which allows you to write declarative tests, free from annotations and long method names. It is heavily inspired by the [jest](https://github.com/jestjs/jest) and [mocha](https://github.com/mochajs/mocha) testing frameworks in the JavaScript ecosystem.
 
-Oatmilk currently supports running in a test project configured with [xunit](https://github.com/xunit/xunit) or [nunit](https://https://nunit.org/). You can run your existing xunit/nunit `Facts` and `Tests` alongside `Oatmilk` tests, so you don't need to convert your entire test suite to Oatmilk all at once.
+Oatmilk currently supports running in a test project configured with [xunit](https://github.com/xunit/xunit) or [nunit](https://https://nunit.org/), with limited support for [MSTest](https://github.com/microsoft/testfx/tree/main). You can run your existing xunit/nunit `Facts` and `Tests` alongside `Oatmilk` tests, so you don't need to convert your entire test suite to Oatmilk all at once.
 
 Note that Oatmilk does not intend to be a full test framework, as such, things like mocking and asserting are out of scope. The assertions provided by Xunit/Nunit/MsTest are entirely compatible with Oatmilk. There are also many other great tools for the job. Have a look at [FluentAssertions](https://github.com/fluentassertions/fluentassertions) for a great assertions library. Or [NSubstitute](https://nsubstitute.github.io/) for your mocking needs.
 
 ## Getting Started
 
-First in your test project, install the appropriate Oatmilk package. Currently only Xunit and Nunit are supported, MSTest is on the roadmap.
+First in your test project, install the appropriate Oatmilk package.
 
 #### Dotnet CLI
 
 ```bash
-dotnet add package Oatmilk.Xunit
-# OR dotnet add package Oatmilk.Nunit
+dotnet add package Oatmilk.Nunit
+# OR dotnet add package Oatmilk.Xunit
+# OR dotnet add package Oatmilk.MSTest
 ```
 
-Then create a test class, and create your first `Oatmilk Test` by using the `Describe` attribute on a method. Be sure to include a static import of `Oatmilk.TestBuilder`.
+Then create a test class, and create your first `Oatmilk Test` by using the `Describe` attribute on a method. Be sure to include a static import of `Oatmilk.TestBuilder`. If using MSTest, your test class will still require a `[TestClass]` attribute.
 
 ```csharp
 using Oatmilk;
 using static Oatmilk.TestBuilder;
 
+// [TestClass] if using MSTest
 public class MyTestClass
 {
     [Describe("My Test Suite")]
@@ -224,6 +226,22 @@ Describe("My test suite")
     })
 ```
 
-### Examples
+### IDE Feature Matrix
+
+Each test runner exposes different level of support for Oatmilk. All of them support running the entire suite of tests.
+
+| Feature                                            | Nunit | Xunit | MSTest |
+| -------------------------------------------------- | ----- | ----- | ------ |
+| Running all tests via `dotnet test`                | ✅    | ✅    | ✅     |
+| Running individual test via `dotnet test --filter` | ✅    | ✅    | ✅     |
+| Debugging entire test suite via IDE                | ✅    | ✅    | ✅     |
+| Debugging single test via IDE                      | ✅    | ✅    | ❌     |
+| Run individual tests via IDE                       | ✅    | ✅    | ❌     |
+| Jump to `It` block via IDE                         | ✅    | ✅    | ❌     |
+| Run/Debug specific `Describe` block via IDE        | ✅    | ❌    | ❌     |
+| View tests as hierarchy in IDE                     | ✅    | ❌    | ❌     |
+| Jump to nested `Describe` block via IDE            | ❌    | ❌    | ❌     |
+
+## Examples
 
 See the [Oatmilk.Tests packages](./test/) for examples of how tests can be written. All tests for Oatmilk are written in it!
