@@ -1,5 +1,8 @@
 namespace Oatmilk.Tests;
 
+#if MSTEST
+[TestClass]
+#endif
 public class DescribeAttributeUnitTestsExample
 {
   [Describe("My tests with the DescribeAttribute")]

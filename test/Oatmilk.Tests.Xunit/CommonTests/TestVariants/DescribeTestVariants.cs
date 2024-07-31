@@ -1,8 +1,10 @@
-using FluentAssertions;
 using Oatmilk.Internal;
 
 namespace Oatmilk.Tests.TestVariants;
 
+#if MSTEST
+[TestClass]
+#endif
 public class DescribeTestVariants
 {
   [Describe("A test suite of many of the Describe variants")]

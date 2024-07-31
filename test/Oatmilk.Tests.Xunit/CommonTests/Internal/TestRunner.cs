@@ -1,9 +1,11 @@
 using System.ComponentModel;
-using FluentAssertions;
 using Oatmilk.Internal;
 
 namespace Oatmilk.Tests.Internal;
 
+#if MSTEST
+[TestClass]
+#endif
 public class TestRunnerTests
 {
   [Describe("OatmilkTestRunner")]
