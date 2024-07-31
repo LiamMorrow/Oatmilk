@@ -27,7 +27,7 @@ public sealed class DescribeAttribute(
   string Description,
   [CallerFilePath] string FileName = "",
   [CallerLineNumber] int LineNumber = 0
-) : TestMethodAttribute
+) : TestMethodAttribute(Description)
 {
   /// <summary>
   /// The description of the test suite.
