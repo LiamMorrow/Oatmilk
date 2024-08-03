@@ -11,7 +11,7 @@
       <Description>
         A test runner extension compatible with Nunit Xunit and MSTest for c# that allows for more readable tests, heavily inspired by Jest
       </Description>
-      <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+      <PackageLicenseExpression>MIT</PackageLicenseExpression>
       <IncludeSymbols>true</IncludeSymbols>
       <SymbolPackageFormat>snupkg</SymbolPackageFormat>
       <IncludeSource>true</IncludeSource>
