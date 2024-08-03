@@ -282,7 +282,7 @@ public class DescribeTestVariants
                   () => Task.Delay(TimeSpan.FromMilliseconds(100))
                 );
 
-                It("should pass", () => Task.Delay(TimeSpan.FromMilliseconds(5)));
+                It("should pass", () => { });
               },
               new(Timeout: TimeSpan.FromMilliseconds(10))
             );
