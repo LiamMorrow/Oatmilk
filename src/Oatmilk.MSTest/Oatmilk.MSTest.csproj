@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <PackageReference Include="MSTest.TestFramework" Version="3.5.0" />
-    <PackageReference Include="xunit.core" Version="2.9.0" />
   </ItemGroup>
 
   <ItemGroup>
