@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="xunit.core" Version="2.9.0" />
+    <PackageReference Include="xunit.core" Version="2.*" />
   </ItemGroup>
 
   <ItemGroup>
