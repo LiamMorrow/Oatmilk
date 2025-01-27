@@ -20,7 +20,7 @@ Oatmilk is a testing library for .NET which allows you to write declarative test
 
 Oatmilk currently supports running in a test project configured with [xunit](https://github.com/xunit/xunit) or [nunit](https://https://nunit.org/), with limited support for [MSTest](https://github.com/microsoft/testfx/tree/main). You can run your existing xunit/nunit `Facts` and `Tests` alongside `Oatmilk` tests, so you don't need to convert your entire test suite to Oatmilk all at once.
 
-Note that Oatmilk does not intend to be a full test framework, as such, things like mocking and asserting are out of scope. The assertions provided by Xunit/Nunit/MsTest are entirely compatible with Oatmilk. There are also many other great tools for the job. Have a look at [FluentAssertions](https://github.com/fluentassertions/fluentassertions) for a great assertions library. Or [NSubstitute](https://nsubstitute.github.io/) for your mocking needs.
+Note that Oatmilk does not intend to be a full test framework, as such, things like mocking and asserting are out of scope. The assertions provided by Xunit/Nunit/MsTest are entirely compatible with Oatmilk. There are also many other great tools for the job. Check out [NSubstitute](https://nsubstitute.github.io/) for your mocking needs.
 
 ## Getting Started
 
