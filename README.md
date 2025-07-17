@@ -13,7 +13,12 @@
 
 <h2 align="center">🥛 Refreshing .NET Testing</h2>
 
+
 > "Jest is great, let's bring it to .NET" - Me
+
+> [!WARNING]
+> Oatmilk is more of a proof of concept. While many things do work, it is unlikely you should be using this library in production. As such, I have archived this repo
+
 
 Oatmilk is a testing library for .NET which allows you to write declarative tests, free from annotations and long method names. It is heavily inspired by the [jest](https://github.com/jestjs/jest) and [mocha](https://github.com/mochajs/mocha) testing frameworks in the JavaScript ecosystem.
 
